@@ -1,0 +1,109 @@
+
+/* Main */
+* { box-sizing: border-box; }
+
+body {
+	min-height: 100vh;
+	background-color: #fff7ee;
+	font-family: "Segoe UI Historic", "Segoe UI", "Roboto", "Helvetica", "Arial";
+}
+
+a { text-decoration: none; color:rgb(25, 25, 25); }
+
+/* Images */
+amp-img { border: none; }
+amp-img.grey-placeholder { background-color: grey; }
+
+/* ----- Header + Navbar ----- */
+header {
+	position: fixed;
+	overflow: hidden;
+	background-color: white;
+	border-bottom: solid 1px #68533a;
+	height: 48px; width: 100%;
+	left: 0px; top: 0px;
+	z-index: 9000;
+}
+
+header amp-img { height: 48px; float:left; background-color: white; }
+
+header a { float: left; display: block; color: #f2f2f2; text-align: center; padding: 14px 16px; height: 48px; }
+header a:hover { background-color: #ddd; color: black; }
+
+/* ----- Columns ----- */
+.layoutMain { flex: 1 1 680px; padding-top: 62px; }
+.layoutSide {
+	display: flex;
+	flex: 0 0 300px;
+	flex-flow: column nowrap;
+	justify-content: flex-start;
+}
+
+.layoutSideFixed {
+	position: fixed;
+	width: 300px; min-height: 100vh;
+	left: 0px; top: 48px;
+	z-index: 8000;
+	display:flex; flex-flow: column wrap;
+}
+
+.layoutSideOpt { padding: 8px 8px 0 8px; display: flex; flex-flow: column;  }
+.layoutSideOpt a { padding-left: 8px; font-family: "Segoe UI Semibold"; font-size: 15px; font-weight: 500; flex: 0 0 48px; justify-content: center; align-items: center; line-height: 48px; }
+.layoutSideOpt a:hover { background-color:rgb(240, 232, 223); border-radius: 10px; }
+
+.layoutRow { display:flex; flex-flow:row nowrap; justify-content:space-between; }
+.layoutRow:after { content: ""; display: table; clear: both; } /* Clear floats after the columns */
+
+@media screen and (min-width:700px) and (max-width: 1000px) {
+	.layoutSide { flex: 0 0 250px; }
+	.layoutSideFixed { width:250px; }
+}
+
+@media screen and (max-width: 700px) {
+	.layoutSide, .layoutSideFixed { display: none; }
+	.layoutMain { width: 100%; }
+}
+
+.spacer-20 { visibility: hidden; padding: 10px 0 10px 0; }
+.spacer-60 { visibility: hidden; padding: 30px 0 30px 0; }
+.spacer-180 { visibility: hidden; padding: 90px 0 90px 0; }
+
+/* ----- Feed Classes ----- */
+#feed-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width:680px; }
+.feed-wrap { display: flex; flex-direction: column; padding-bottom: 16px; width:100%; }
+.feed-wrap > div { border-left: solid 1px #68533a; border-right: solid 1px #68533a; }
+.feed-top { display: flex; background-color: white; height:48px; border-top: solid 1px #68533a; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+.feed-icon { width: 48px;  }
+.feed-header { flex: 1; }
+.feed-menu { width:48px; height:48px; }
+.feed-menu-inner { display:flex; align-items:center; justify-content:center; width:48px; height:48px; }
+.feed-menu-icon { border-radius:30px; padding:8px; cursor: pointer; }
+.feed-menu-icon:hover { background-color: #68533a; }
+.feed-comment { background-color: white; padding: 8px 14px 8px 14px; }
+.feed-comment > p { margin: 0px; padding: 0px 0px 10px 0px; }
+.feed-comment > p:last-child { padding: 0px 0px 4px 0px; }
+.feed-image { max-width: 680px; }
+.feed-title { background-color: #e4ebe5; padding: 8px 14px 8px 14px; border-bottom: solid 1px #68533a; }
+.feed-title > p { margin:0px; padding:0px; color: rgb(100, 100, 100); }
+.feed-social {
+	background-color: white; padding: 8px 14px 8px 14px;
+	border-bottom: solid 1px #68533a; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;
+}
+
+.feed-two { display:flex; flex-flow: row; justify-content: space-between; padding-bottom: 16px; width:100%; }
+.feed-two-card { background-color: white; flex-basis: 49%; padding-bottom: 8px; text-align: center; border: solid 1px #68533a; border-radius: 5px; }
+
+/* ----- Text Classes ----- */
+h1 { margin: 1rem; }
+h2 { font-family: "Segoe UI Semibold"; font-size:17px; margin: 2px 0px 2px 0px; }
+.h4 { font-family: "Segoe UI Semibold"; font-size: 15px; font-weight: 600; margin-top:8px; }
+.note { font-size: 13px; font-weight: 400; color: rgb(100, 100, 100); }
+
+/* ----- Footer ----- */
+footer {
+	background-color: #351a00;
+	text-align: center;
+	padding: 10px;
+	position: absolute; left: 0; bottom:0;
+	height: 100px; width: 100%;
+}

@@ -1,0 +1,222 @@
+
+/***************************
+****** SEE API SETUP *******
+***************************/
+
+// Review the server-setup in the API system.
+	
+	// Several critical steps apply to local website operations.
+
+
+/***************************
+****** Useful Values *******
+***************************/
+
+IPv4:	45.56.76.33
+IPv6:	2600:3c00::f03c:92ff:fee8:0fc7
+
+
+/**************************
+****** Server Setup *******
+**************************/
+
+// Update apt
+	apt update
+	
+// Prepare Web Folder for Druidis (/var/www)
+	mkdir /var/www
+	
+	// Move web contents to /var/www
+
+
+/******************************
+****** Setting up Nginx *******
+******************************/
+
+// Install nginx
+	apt install nginx -y
+
+// TEST and RESTART nginx
+	nginx -t
+	systemctl restart nginx
+
+// LOCATION
+/var/www
+
+
+// LOCAL NGINX CONFIGURATION
+
+server {
+	listen 80;
+	server_name localhost dev.druidis;
+	keepalive_timeout 70;
+
+	index index.html;
+	location / {
+		try_files $uri $uri.html $uri/ =404;
+	}
+}
+
+server {
+	listen 80;
+	server_name api.dev.druidis;
+
+	location ~ [^\/](.*) {
+		proxy_pass http://api.dev.druidis:8080;
+	}
+
+	location / {
+		proxy_pass http://api.dev.druidis:8080;
+	}
+}
+
+
+// PRODUCTION NGINX
+
+server {
+	
+	# SSL configuration
+	listen 443 ssl default_server;
+	listen [::]:443 ssl default_server;
+	
+	server_name druidis.org;
+	
+	keepalive_timeout 70;
+	
+	ssl_certificate /etc/letsencrypt/live/creo.nexus.games/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/creo.nexus.games/privkey.pem;
+	
+	root /var/www;
+	
+	index index.html;
+	
+	location / {
+		try_files $uri $uri.html $uri/ =404;
+	}
+}
+
+
+/************************
+****** Set up DNS *******
+************************/
+
+// Set up DNS on Linode
+
+	// Records
+	A 	druidis.org			96.126.120.19
+	A 	druidis.org			2600:3c00::f03c:92ff:fec7:df01
+	
+	NS 	druidis.org			ns1.linode.com
+	NS 	druidis.org			ns2.linode.com
+	NS 	druidis.org			ns3.linode.com
+	NS 	druidis.org			ns4.linode.com
+	NS 	druidis.org			ns5.linode.com
+
+// Also set up name servers on Namecheap
+	ns1.linode.com
+	ns2.linode.com
+	ns3.linode.com
+	ns4.linode.com
+	ns5.linode.com
+	
+
+
+
+/****************************
+****** Git Repository *******
+****************************/
+
+// Add an SSH key on Github
+	https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+	
+	ssh-keygen -t rsa -b 4096 -C "tarsupin@gmail.com"
+
+	// WARNING: Might need this for later use.
+	// Load the sshkey. Unclear if I need to keep the ssh-agent running after a restart??
+	eval $(ssh-agent -s)
+	ssh-add ~/.ssh/id_rsa
+
+	// Copy the contents of id_rsa.pub
+	echo "$(cat ~/.ssh/id_rsa.pub)"
+
+	// Load it into github
+	https://github.com/settings/keys
+
+
+// Create a directory for our application.
+	mkdir ~/nexus
+	cd ~/nexus
+
+// WARNING: Make sure tsc -v is 3.5 or higher, or compiling won't work.
+	npm install -g typescript@latest
+	tsc -v
+
+// Go to the repository to pull
+	https://github.com/tarsupin/ryu-server
+
+	// Get the ssh line, and git clone it.
+	git clone git@github.com:tarsupin/ryu-server.git
+
+	// Run the setup commands
+	npm install
+
+	// Set up the config file for this environment.
+	cd ~/nexus/ryu-server/config
+	cp config-template.ts config.ts
+
+	// Need to change 'local' to 'prod'
+	nano config.ts
+
+	// Build the server.
+	cd ~/nexus/ryu-server
+	tsc -p tsconfig.json
+
+// Repeat the process for ryu-client, but with a specific folder.
+	https://github.com/tarsupin/ryu-client
+
+	// Get the ssh line, and git clone it.
+	cd ~/nexus && git clone git@github.com:tarsupin/ryu-client.git
+
+	// Run the setup commands
+	npm install
+	npm install npm@latest -g
+
+	// Set up the config file for this environment.
+	cd ~/nexus/ryu-client/src/Config/Environment
+	cp ~/nexus/ryu-client/src/Config/Environment/ConfigEnvironment-Template.ts ~/nexus/ryu-client/src/Config/Environment/ConfigEnvironment.ts
+
+	// Change 'local' to 'prod'
+	// ***MUST*** remove the commented out section or ERROR will occur.
+	nano ~/nexus/ryu-client/src/Config/Environment/ConfigEnvironment.ts
+
+	// Build the client's dist.
+	cd ~/nexus/ryu-client && tsc -p tsconfig-prod.json
+
+
+/********************
+****** Assets *******
+********************/
+
+
+
+/**********************
+****** Security *******
+**********************/
+
+// Disallow Root Password Access (SSH Keys Only)
+	
+	nano /etc/ssh/sshd_config
+	
+	# Set "#PasswordAuthentication" to "no"
+	
+	service ssh restart
+	
+
+// Configure a basic firewall, to prevent access except to port 80 and port 443.
+	
+	# Enable OpenSSH connections, HTTP traffic, HTTPS traffic
+	sudo ufw allow OpenSSH && sudo ufw allow http && sudo ufw allow https
+	
+	# Enable the firewall.
+	sudo ufw enable
+	
