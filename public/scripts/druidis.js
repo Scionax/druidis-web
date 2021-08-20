@@ -1,11 +1,9 @@
 
-console.log(window.location);
+// var pathname = window.location.pathname;
 
-var pathname = window.location.pathname;
-
-fetch('http://api.dev.druidis/data/forums/Travel')
-	.then(response => response.json())
-	.then(data => console.log(data));
+// fetch('http://api.dev.druidis/data/forums/Travel')
+// 	.then(response => response.json())
+// 	.then(data => console.log(data));
 
 
 function addFeedPost() {
@@ -14,7 +12,7 @@ function addFeedPost() {
 	
 	// Locate the feed-header
 	const elements = copy.querySelectorAll('div.feed-header > div.h3');
-	elements[0].innerHTML = "BWAHAHAHAHA";
+	elements[0].innerHTML = "Header Top Section";
 	
 	for(const elem of elements) {
 		console.log(elem.innerHTML);
