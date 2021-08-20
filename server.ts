@@ -13,6 +13,9 @@ import WebController from "./controller/WebController.ts";
 // 	const arg = Deno.args[i];
 // }
 
+// Initializations
+await WebController.initialize();
+
 // Custom Routing Map
 const RouteMap: { [name: string]: WebController } = {
 	// "about": new AboutController(),
@@ -48,7 +51,10 @@ const serv = config.local ? config.serverLocal : config.server;
 console.log("Launching Server on Port " + serv.port + ".")
 
 if(serv.certFile && serv.keyFile) {
-	const server = Deno.listenTls({ port: serv.port, certFile: serv.certFile, keyFile: serv.keyFile, alpnProtocols: ["h2", "http/1.1"] });
+	const server = Deno.listenTls({
+		port: serv.port, certFile: serv.certFile, keyFile: serv.keyFile,
+		// alpnProtocols: ["h2", "http/1.1"]
+	});
 	for await (const conn of server) { handle(conn); }
 } else {
 	const server = Deno.listen({ port: serv.port });
