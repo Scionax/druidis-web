@@ -38,6 +38,14 @@ export default class Conn {
 	}
 	
 	// return await WebController.sendJson("Path successful!");
+	async sendHTML( html: string ): Promise<Response> {
+		return await new Response(html, { status: 200, headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Content-Type": "text/html; charset=utf-8",
+		}});
+	}
+	
+	// return await WebController.sendJson("Path successful!");
 	async sendJson( jsonObj: unknown ): Promise<Response> {
 		return await new Response(JSON.stringify({ u: this.userObj, d: jsonObj }), { status: 200, headers: {
 			"Access-Control-Allow-Origin": "*",

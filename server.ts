@@ -7,6 +7,7 @@
 import { config } from "./config.ts";
 import Conn from "./core/Conn.ts";
 import WebController from "./controller/WebController.ts";
+import FeedController from "./controller/FeedController.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -15,11 +16,12 @@ import WebController from "./controller/WebController.ts";
 
 // Initializations
 await WebController.initialize();
+await FeedController.initialize();
 
 // Custom Routing Map
 const RouteMap: { [name: string]: WebController } = {
+	"feed": new FeedController(),
 	// "about": new AboutController(),
-	// "home": new HomeController(),
 };
 
 // Server Routing
@@ -34,14 +36,14 @@ async function handle(conn: Deno.Conn) {
 			await requestEvent.respondWith(RouteMap[conn.url1].runHandler(conn));
 		}
 		
-		// No API Found
+		// Home Page
+		else if(!conn.url1) {
+			await requestEvent.respondWith(RouteMap.feed.runHandler(conn));
+		}
+		
+		// Error Page
 		else {
-			await requestEvent.respondWith(new Response("404 - Request Not Found", {
-				status: 404,
-				headers: {
-					"content-type": "text/html; charset=utf-8",
-				}
-			}));
+			await requestEvent.respondWith( new Response("404 - Request Not Found", { status: 404 }) );
 		}
 	}
 }

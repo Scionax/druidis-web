@@ -47,24 +47,31 @@ IPv6:	2600:3c00::f03c:92ff:fee8:0fc7
 // LOCAL NGINX CONFIGURATION
 
 server {
-	listen 80;
-	server_name localhost dev.druidis;
+	
+	listen       80;
+	server_name  localhost dev.druidis;
+	
 	keepalive_timeout 70;
-
+	
 	index index.html;
-	location / {
+	
+	location ~ [^\/](.*) {
 		try_files $uri $uri.html $uri/ =404;
+	}
+	
+	location / {
+		proxy_pass http://dev.druidis:8060;
 	}
 }
 
 server {
 	listen 80;
 	server_name api.dev.druidis;
-
+	
 	location ~ [^\/](.*) {
 		proxy_pass http://api.dev.druidis:8080;
 	}
-
+	
 	location / {
 		proxy_pass http://api.dev.druidis:8080;
 	}

@@ -72,14 +72,14 @@ header a:hover { background-color: #ddd; color: black; }
 #feed-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width:680px; }
 .feed-wrap { display: flex; flex-direction: column; padding-bottom: 16px; width:100%; }
 .feed-wrap > div { border-left: solid 1px #68533a; border-right: solid 1px #68533a; }
-.feed-top { display: flex; background-color: white; height:48px; border-top: solid 1px #68533a; border-top-left-radius: 5px; border-top-right-radius: 5px; }
+.feed-top { display: flex; background-color: white; height:52px; border-top: solid 1px #68533a; border-top-left-radius: 5px; border-top-right-radius: 5px; }
 .feed-icon { width: 48px;  }
 .feed-header { flex: 1; }
 .feed-menu { width:48px; height:48px; }
 .feed-menu-inner { display:flex; align-items:center; justify-content:center; width:48px; height:48px; }
 .feed-menu-icon { border-radius:30px; padding:8px; cursor: pointer; }
 .feed-menu-icon:hover { background-color: #68533a; }
-.feed-comment { background-color: white; padding: 8px 14px 8px 14px; }
+.feed-comment { background-color: white; padding: 4px 14px 8px 14px; }
 .feed-comment > p { margin: 0px; padding: 0px 0px 10px 0px; }
 .feed-comment > p:last-child { padding: 0px 0px 4px 0px; }
 .feed-image { max-width: 680px; }
@@ -95,8 +95,8 @@ header a:hover { background-color: #ddd; color: black; }
 
 /* ----- Text Classes ----- */
 h1 { margin: 1rem; }
-h2 { font-family: "Segoe UI Semibold"; font-size:17px; margin: 2px 0px 2px 0px; }
-.h4 { font-family: "Segoe UI Semibold"; font-size: 15px; font-weight: 600; margin-top:8px; }
+h2, .h2 { font-family: "Segoe UI Semibold"; font-size:17px; margin: 2px 0px 2px 0px; }
+h3, .h3 { font-family: "Segoe UI Semibold"; font-size: 15px; font-weight: 600; margin-top:8px; }
 .note { font-size: 13px; font-weight: 400; color: rgb(100, 100, 100); }
 
 /* ----- Footer ----- */
