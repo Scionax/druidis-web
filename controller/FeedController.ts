@@ -25,6 +25,7 @@ export default class FeedController extends WebController {
 		// Cache Full Page
 		FeedController.html = `
 		${WebController.header}
+		<meta name="robots" content="noindex">
 		${WebController.headerCloser}
 		${WebController.midStart}
 		${FeedController.feedPage}
