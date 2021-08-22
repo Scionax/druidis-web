@@ -1,6 +1,6 @@
 
-function addFeedPost(post) {
-	
+function displayFeedPost(post) {
+	console.log(post);
 	// Feed Icon
 	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `./public/images/logo/logo-48.png`});
 	const feedIcon = createElement("div", {"class": "feed-icon"}, [feedIconImg]);
@@ -52,7 +52,7 @@ function addFeedPost(post) {
 	
 	// Attach Created Elements to Feed Section
 	var feedSection = document.getElementById("feed-section");
-	console.log(feedPost);
+	
 	feedSection.appendChild(feedPost);
 }
 
@@ -93,14 +93,14 @@ async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
 	// Build Query String
 	let query;
 	
-	if(scanType === 0) {
-		if(idHigh > -1) { query = `?h=${idHigh}`; }
-	} else if(scanType === 1) {
+	if(scanType === 1) {
 		query = `?s=asc`;
 		if(idHigh > -1) { query += `&h=${idHigh}`; } 
-	} else if(scanType) {
+	} else if(scanType === -1) {
 		query = `?s=desc`;
 		if(idLow > -1) { query += `&l=${idLow}`; }
+	} else {
+		query = (idHigh > -1) ? `?h=${idHigh}` : "";
 	}
 	
 	console.log("--- Fetching Results ---");
@@ -166,7 +166,7 @@ function getIdRangeOfCachedPosts(cachedPosts) {
 	return {idHigh: high, idLow: low};
 }
 
-window.onload = async function() {
+async function loadForumData() {
 	const segments = getUrlSegments();
 	console.log('segments');
 	console.log(segments);
@@ -185,7 +185,7 @@ window.onload = async function() {
 		// Determine what type of Request to Run
 		if(lastPull) { lastPull = Number(lastPull); }
 		
-		let willFetch = false;
+		let willFetch = idHigh === -1 ? false : true;
 		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
 		
 		// If we haven't pulled in at least five minutes, we'll make sure a new fetch happens.
@@ -215,7 +215,7 @@ window.onload = async function() {
 		// Display Cached Data
 		for (const [_key, post] of Object.entries(cachedPosts)) {
 			if(!post.id) { return; }
-			addFeedPost(post);
+			displayFeedPost(post);
 		}
 	}
 	
@@ -224,8 +224,5 @@ window.onload = async function() {
 		- Check if the user scrolls near an unknown ID range / non-cached results.
 		- Load the most recent 10 posts in the forum.
 		- Update the ID range that the user has retrieved.
-		
-		// Server Calls
-		/forum/:forum --> returns [{"title":"First Post", ...}, {"title":"Second Post", ...}, ...]
 	*/
-};
+}

@@ -59,7 +59,7 @@ export default class ForumController extends WebController {
 		${ForumController.emptyFeedTwo}
 		<script>
 		window.onload = function() {
-			// fetchForumPost();
+			loadForumData();
 		};
 		</script>
 		${WebController.footerCloser}`;
