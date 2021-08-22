@@ -1,6 +1,6 @@
 
 function displayFeedPost(post) {
-	console.log(post);
+	
 	// Prepare Values
 	const imgPage = Math.ceil(post.id/1000);
 	const imgPath = `${post.forum}/${imgPage}/${post.img}`;
@@ -56,13 +56,17 @@ function displayFeedPost(post) {
 	const feedTitleComment = createElement("p");
 	feedTitleComment.innerHTML = post.content;
 	
+	const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle, feedTitleComment]);
+	
+	// Feed Link (Applies to Media & Title + Content)
+	const feedHov = createElement("a", {"class": "feed-hov", "href": post.url}, [feedImage, feedTitle]);
+	
+	// Social Options
 	const feedSocial = createElement("div", {"class": "feed-social"});
 	feedSocial.innerHTML = "Social Stuff";
 	
-	const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle, feedTitleComment]);
-	
 	// Finalize New Post Feed
-	const feedPost = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedImage, feedTitle, feedSocial]);
+	const feedPost = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedHov, feedSocial]);
 	
 	// Attach Created Elements to Feed Section
 	var feedSection = document.getElementById("feed-section");
@@ -184,8 +188,7 @@ function getIdRangeOfCachedPosts(cachedPosts) {
 
 async function loadForumData() {
 	const segments = getUrlSegments();
-	console.log('segments');
-	console.log(segments);
+	
 	// Forum Handling
 	if(segments.length >= 2 && segments[0] === "forum" && typeof segments[1] === "string") {
 		const forum = segments[1];
@@ -205,7 +208,7 @@ async function loadForumData() {
 		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
 		
 		// If we haven't pulled in at least five minutes, we'll make sure a new fetch happens.
-		if(!lastPull || lastPull < (Math.floor(Date.now() / 1000) - 300)) {
+		if(willFetch === false && (!lastPull || lastPull < (Math.floor(Date.now() / 1000) - 300))) {
 			willFetch = true;
 			scanType = 1;
 			
