@@ -158,6 +158,8 @@ function cacheForumPosts(forum, postResponse) {
 			window.localStorage.setItem(`posts:${forum}`, JSON.stringify(cachedPosts));
 		}
 	}
+	
+	return cachedPosts;
 }
 
 function getUrlSegments() {
@@ -192,7 +194,7 @@ async function loadForumData() {
 		// {stuff here}
 		
 		// Get Cached Data
-		const cachedPosts = getCachedPosts(forum);
+		let cachedPosts = getCachedPosts(forum);
 		let lastPull = window.localStorage.getItem(`lastPull:${forum}`);
 		const {idHigh, idLow} = getIdRangeOfCachedPosts(cachedPosts);
 		
@@ -219,7 +221,7 @@ async function loadForumData() {
 				const postResponse = await fetchForumPost(forum, idHigh, idLow, scanType);
 				console.info(postResponse);
 				// Cache Results
-				cacheForumPosts(forum, postResponse);
+				cachedPosts = cacheForumPosts(forum, postResponse);
 				window.localStorage.setItem(`lastPull:${forum}`, Math.floor(Date.now() / 1000));
 			} catch {
 				console.error(`Error with response in forum: ${forum}`)
