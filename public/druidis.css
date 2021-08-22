@@ -79,7 +79,7 @@ header a:hover { background-color: #ddd; color: black; }
 .feed-menu-inner { display:flex; align-items:center; justify-content:center; width:48px; height:48px; }
 .feed-menu-icon { border-radius:30px; padding:8px; cursor: pointer; }
 .feed-menu-icon:hover { background-color: #d8c3aa; }
-.feed-comment { background-color: white; padding: 4px 14px 8px 14px; }
+.feed-comment { background-color: white; padding: 10px 30px 14px 30px; }
 .feed-comment > p { margin: 0px; padding: 0px 0px 10px 0px; }
 .feed-comment > p:last-child { padding: 0px 0px 4px 0px; }
 .feed-image { max-width: 680px; }

@@ -1,6 +1,10 @@
 
 function displayFeedPost(post) {
 	console.log(post);
+	// Prepare Values
+	const imgPage = Math.ceil(post.id/1000);
+	const imgPath = `${post.forum}/${imgPage}/${post.img}`;
+	
 	// Feed Icon
 	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `./public/images/logo/logo-48.png`});
 	const feedIcon = createElement("div", {"class": "feed-icon"}, [feedIconImg]);
@@ -10,7 +14,13 @@ function displayFeedPost(post) {
 	feedHeaderTitle.innerHTML = "Author Name or Title";
 	
 	const feedHeaderSubNote = createElement("div", {"class": "note"});
-	feedHeaderSubNote.innerHTML = "Source or other note";
+	
+	try {
+		const urlInfo = new URL(post.url);
+		feedHeaderSubNote.innerHTML = `Source: ${urlInfo.hostname}`;
+	} catch {
+		// Do nothing
+	}
 	
 	const feedHeader = createElement("div", {"class": "feed-header"}, [feedHeaderTitle, feedHeaderSubNote]);
 	
@@ -27,11 +37,15 @@ function displayFeedPost(post) {
 	let feedComment;
 	if(post.comment) {
 		feedComment = createElement("div", {"class": "feed-comment"});
-		feedHeaderSubNote.innerHTML = post.comment;
+		feedComment.innerHTML = post.comment;
 	}
 	
 	// Feed Image
-	const feedImageImg = createElement("amp-img", {"layout": "responsive", "max-width": 680, "width": 680, "height": 500, "src": `./public/images/delete/test.jpg`});
+	const feedImageImg = createElement("amp-img", {
+		"layout": "responsive", "max-width": Number(post.w), "width": Number(post.w), "height": Number(post.h),
+		"src": `https://us-east-1.linodeobjects.com/druidis-cdn/${imgPath}`
+	});
+	
 	const feedImageInner = createElement("div", {"class": "feed-image-inner"}, [feedImageImg]);
 	const feedImage = createElement("div", {"class": "feed-image"}, [feedImageInner]);
 	
@@ -40,7 +54,7 @@ function displayFeedPost(post) {
 	feedTitleTitle.innerHTML = post.title;
 	
 	const feedTitleComment = createElement("p");
-	feedTitleComment.innerHTML = post.comment;
+	feedTitleComment.innerHTML = post.content;
 	
 	const feedSocial = createElement("div", {"class": "feed-social"});
 	feedSocial.innerHTML = "Social Stuff";
