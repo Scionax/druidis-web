@@ -13,7 +13,8 @@ import WebController from "./WebController.ts";
 	// Procedure on forum load:
 	- Check if the user has cached content already.
 		- If so, check the last timestamp a request was made for this forum.
-		- If last request time was over five minutes ago, request new content update.
+		- If last request time as over 5 minutes ago, request an ascending update. Include `idHigh` as closest cached result to identify return values.
+		- If last request time was over 12 hours ago, request new content update.
 			- New Content Update should include `idHigh` as the closest cached result. This helps identify how the server should respond.
 	
 	// Procedure on scrolling:
@@ -58,7 +59,7 @@ export default class ForumController extends WebController {
 		${ForumController.emptyFeedTwo}
 		<script>
 		window.onload = function() {
-			fetchForumPost();
+			// fetchForumPost();
 		};
 		</script>
 		${WebController.footerCloser}`;

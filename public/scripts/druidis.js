@@ -1,21 +1,91 @@
 
-function addFeedPost() {
-	const copy = document.getElementById("feed-copy").cloneNode(true);
-	copy.style.display = "block";
+function addFeedPost(post) {
 	
-	// Locate the feed-header
-	const elements = copy.querySelectorAll('div.feed-header > div.h3');
-	elements[0].innerHTML = "Header Top Section";
+	// Feed Icon
+	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `./public/images/logo/logo-48.png`});
+	const feedIcon = createElement("div", {"class": "feed-icon"}, [feedIconImg]);
 	
-	for(const elem of elements) {
-		console.log(elem.innerHTML);
+	// Feed Header
+	const feedHeaderTitle = createElement("div", {"class": "h3"});
+	feedHeaderTitle.innerHTML = "Author Name or Title";
+	
+	const feedHeaderSubNote = createElement("div", {"class": "note"});
+	feedHeaderSubNote.innerHTML = "Source or other note";
+	
+	const feedHeader = createElement("div", {"class": "feed-header"}, [feedHeaderTitle, feedHeaderSubNote]);
+	
+	// Feed Menu
+	const feedMenuInner = createElement("div", {"class": "feed-menu-inner"});
+	feedMenuInner.innerHTML = "&#8226;&#8226;&#8226;";
+	
+	const feedMenu = createElement("div", {"class": "feed-menu"}, [feedMenuInner]);
+	
+	// Feed Top (full top line; includes Icon, Header, Menu)
+	const feedTop = createElement("div", {"class": "feed-top"}, [feedIcon, feedHeader, feedMenu]);
+	
+	// Feed Comment
+	let feedComment;
+	if(post.comment) {
+		feedComment = createElement("div", {"class": "feed-comment"});
+		feedHeaderSubNote.innerHTML = post.comment;
 	}
 	
+	// Feed Image
+	const feedImageImg = createElement("amp-img", {"layout": "responsive", "max-width": 680, "width": 680, "height": 500, "src": `./public/images/delete/test.jpg`});
+	const feedImageInner = createElement("div", {"class": "feed-image-inner"}, [feedImageImg]);
+	const feedImage = createElement("div", {"class": "feed-image"}, [feedImageInner]);
+	
+	// Feed Title
+	const feedTitleTitle = createElement("h2");
+	feedTitleTitle.innerHTML = post.title;
+	
+	const feedTitleComment = createElement("p");
+	feedTitleComment.innerHTML = post.comment;
+	
+	const feedSocial = createElement("div", {"class": "feed-social"});
+	feedSocial.innerHTML = "Social Stuff";
+	
+	const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle, feedTitleComment]);
+	
+	// Finalize New Post Feed
+	const feedPost = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedImage, feedTitle, feedSocial]);
+	
+	// Attach Created Elements to Feed Section
 	var feedSection = document.getElementById("feed-section");
-	feedSection.appendChild(copy);
+	console.log(feedPost);
+	feedSection.appendChild(feedPost);
 }
 
-async function fetchForumPost(forum, idHigh = -1, idLow = -1, scan = "new") {
+function createElement(element, attribute, inner) {
+	if(typeof(element) === "undefined") { return false; }
+	if(typeof(inner) === "undefined") { inner = ""; }
+	
+	const el = document.createElement(element);
+	if(typeof(attribute) === 'object') {
+		for(const attKey in attribute) {
+			el.setAttribute(attKey, attribute[attKey]);
+		}
+	}
+	
+	if(!Array.isArray(inner)) { inner = [inner]; }
+	
+	for(let k = 0; k < inner.length; k++) {
+		if(!inner[k]) { continue; }
+		if(inner[k].tagName) {
+			el.appendChild(inner[k]);
+		} else {
+			el.appendChild(document.createTextNode(inner[k]));
+		}
+	}
+	
+	return el;
+}
+
+// scanType
+//		0 = New Scan. Finds new content, starting from the very top.
+//		1 = Ascending Scan. Used to find recent updates when your cache is already well-updated. Uses High ID range.
+//		-1 = Descending Scan. Used for auto-loading, when user is scrolling down. Uses Low ID range.
+async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
 	
 	// TODO: Improve our method of handling the domain (must work locally).
 	const domain = `http://api.${location.hostname}`;
@@ -23,15 +93,18 @@ async function fetchForumPost(forum, idHigh = -1, idLow = -1, scan = "new") {
 	// Build Query String
 	let query;
 	
-	if(scan === "new") {
+	if(scanType === 0) {
 		if(idHigh > -1) { query = `?h=${idHigh}`; }
-	} else if(scan === "asc") {
-		query = `s=asc`;
+	} else if(scanType === 1) {
+		query = `?s=asc`;
 		if(idHigh > -1) { query += `&h=${idHigh}`; } 
-	} else {
-		query = `s=desc`;
+	} else if(scanType) {
+		query = `?s=desc`;
 		if(idLow > -1) { query += `&l=${idLow}`; }
 	}
+	
+	console.log("--- Fetching Results ---");
+	console.log(`${domain}/forum/${forum}${query}`);
 	
 	const response = await fetch(`${domain}/forum/${forum}${query}`);
 	return await response.json();
@@ -95,7 +168,8 @@ function getIdRangeOfCachedPosts(cachedPosts) {
 
 window.onload = async function() {
 	const segments = getUrlSegments();
-	
+	console.log('segments');
+	console.log(segments);
 	// Forum Handling
 	if(segments.length >= 2 && segments[0] === "forum" && typeof segments[1] === "string") {
 		const forum = segments[1];
@@ -111,13 +185,25 @@ window.onload = async function() {
 		// Determine what type of Request to Run
 		if(lastPull) { lastPull = Number(lastPull); }
 		
-		// If we haven't pulled in at least five minutes, grab a new set.
+		let willFetch = false;
+		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
+		
+		// If we haven't pulled in at least five minutes, we'll make sure a new fetch happens.
 		if(!lastPull || lastPull < (Math.floor(Date.now() / 1000) - 300)) {
+			willFetch = true;
+			scanType = 1;
 			
-			// Fetch recent forum feed data.
+			// If we haven't pulled in 12 hours, run a new fetch to ensure content isn't stale.
+			if(lastPull < (Math.floor(Date.now() / 1000) - (60 * 60 * 24))) {
+				scanType = 0;
+			}
+		}
+		
+		// Fetch recent forum feed data.
+		if(willFetch) {
 			try {
-				const postResponse = await fetchForumPost(forum, idHigh, idLow);
-				
+				const postResponse = await fetchForumPost(forum, idHigh, idLow, scanType);
+				console.info(postResponse);
 				// Cache Results
 				cacheForumPosts(forum, postResponse);
 				window.localStorage.setItem(`lastPull:${forum}`, Math.floor(Date.now() / 1000));
@@ -127,16 +213,13 @@ window.onload = async function() {
 		}
 		
 		// Display Cached Data
-		
+		for (const [_key, post] of Object.entries(cachedPosts)) {
+			if(!post.id) { return; }
+			addFeedPost(post);
+		}
 	}
 	
 	/*
-		// Procedure on forum load:
-		- Check if the user has cached content already.
-			- If so, check the last timestamp a request was made for this forum.
-			- If last request time was over five minutes ago, request new content update.
-				- New Content Update should include `idHigh` as the closest cached result. This helps identify how the server should respond.
-		
 		// Procedure on scrolling:
 		- Check if the user scrolls near an unknown ID range / non-cached results.
 		- Load the most recent 10 posts in the forum.
