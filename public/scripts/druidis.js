@@ -15,11 +15,23 @@ function addFeedPost() {
 	feedSection.appendChild(copy);
 }
 
-async function fetchForumPost(forum, idHigh = -1, idLow = -1) {
+async function fetchForumPost(forum, idHigh = -1, idLow = -1, scan = "new") {
 	
 	// TODO: Improve our method of handling the domain (must work locally).
 	const domain = `http://api.${location.hostname}`;
-	const query = (idHigh > -1) ? `?s=${idHigh}` : "";
+	
+	// Build Query String
+	let query;
+	
+	if(scan === "new") {
+		if(idHigh > -1) { query = `?h=${idHigh}`; }
+	} else if(scan === "asc") {
+		query = `s=asc`;
+		if(idHigh > -1) { query += `&h=${idHigh}`; } 
+	} else {
+		query = `s=desc`;
+		if(idLow > -1) { query += `&l=${idLow}`; }
+	}
 	
 	const response = await fetch(`${domain}/forum/${forum}${query}`);
 	return await response.json();
@@ -100,7 +112,7 @@ window.onload = async function() {
 		if(lastPull) { lastPull = Number(lastPull); }
 		
 		// If we haven't pulled in at least five minutes, grab a new set.
-		if(!lastPull) {
+		if(!lastPull || lastPull < (Math.floor(Date.now() / 1000) - 300)) {
 			
 			// Fetch recent forum feed data.
 			try {
