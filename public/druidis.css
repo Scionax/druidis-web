@@ -33,18 +33,28 @@ header a:hover { background-color: #ddd; color: black; }
 /* ----- Main Menu ----- */
 #menuMain {
 	display: none;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content:space-evenly;
 	
 	position: fixed;
-	height: 100%; width: 100%;
+	height: calc(100% - 48px); width: 100%;
 	left: 0; top: 48px;
 	
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	background-color: white;
+	z-index:35000;
+	padding:3px 0 0 0;
 }
 
-#menuMain:target {
-	display: block;
+#menuMain > a {
+	background-color: #bcdafe;
+	flex: 1 1;
+	width: 98%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 10px;
+	margin-bottom:3px;
 }
 
 /* ----- Columns ----- */
@@ -79,7 +89,7 @@ header a:hover { background-color: #ddd; color: black; }
 	z-index: 8000;
 }
 
-.RWrap2 { display:flex; flex-flow: column wrap; }
+.RWrap2 { display:flex; flex-flow: column wrap; margin: 0 4px 0 4px; }
 
 .RInner {
 	flex: 0 0;

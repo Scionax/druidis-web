@@ -245,3 +245,9 @@ async function loadForumData() {
 		- Update the ID range that the user has retrieved.
 	*/
 }
+
+// Main Menu Clickable
+document.getElementById("menuClick").addEventListener("click", function() {
+	var menu = document.getElementById("menuMain");
+	menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+});
