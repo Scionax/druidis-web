@@ -6,7 +6,7 @@ function displayFeedPost(post) {
 	const imgPath = `${post.forum}/${imgPage}/${post.img}`;
 	
 	// Feed Icon
-	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `./public/images/logo/logo-48.png`});
+	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `/public/images/logo/logo-48.png`});
 	const feedIcon = createElement("div", {"class": "feed-icon"}, [feedIconImg]);
 	
 	// Feed Header

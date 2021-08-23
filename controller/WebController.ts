@@ -19,11 +19,11 @@ export default class WebController {
 	static async initialize() {
 		const decoder = new TextDecoder("utf-8");
 		
-		const siteBaseUrl = config.local ? "http://dev.druidis" : "https://druidis.org";
+		// const siteBaseUrl = config.local ? "http://dev.druidis" : "https://druidis.org";
+		// `<base href="${siteBaseUrl}" />`;
 		
 		// Cache Header
-		WebController.header = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/header.html`)) + `
-		<base href="${siteBaseUrl}" />`;
+		WebController.header = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/header.html`));
 		WebController.headerCloser = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/header-closer.html`));
 		
 		// Cache Middle
