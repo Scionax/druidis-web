@@ -9,6 +9,7 @@ import Conn from "./core/Conn.ts";
 import WebController from "./controller/WebController.ts";
 import FeedController from "./controller/FeedController.ts";
 import ForumController from "./controller/ForumController.ts";
+import PostController from "./controller/PostController.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -19,11 +20,13 @@ import ForumController from "./controller/ForumController.ts";
 await WebController.initialize();
 await FeedController.initialize();
 await ForumController.initialize();
+await PostController.initialize();
 
 // Custom Routing Map
 const RouteMap: { [name: string]: WebController } = {
 	"feed": new FeedController(),
 	"forum": new ForumController(),
+	"post": new PostController(),
 	// "about": new AboutController(),
 };
 

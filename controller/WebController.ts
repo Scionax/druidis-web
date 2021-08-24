@@ -1,4 +1,3 @@
-import { config } from "../config.ts";
 import Conn from "../core/Conn.ts";
 
 export default class WebController {
@@ -6,10 +5,10 @@ export default class WebController {
 	// Cached HTML
 	static header = "";
 	static headerCloser = "";
-	static midStart = "";
-	static midEnd = "";
+	static panelOpen = "";
+	static panelClose = "";
+	static pageClose = "";
 	static footer = "";
-	static footerCloser = "";
 	
 	// This only exists here as an interface, but is important for running RouteMap[url], which points to a WebRouter class.
 	async runHandler(conn: Conn): Promise<Response> {
@@ -20,18 +19,17 @@ export default class WebController {
 		const decoder = new TextDecoder("utf-8");
 		
 		// const siteBaseUrl = config.local ? "http://dev.druidis" : "https://druidis.org";
-		// `<base href="${siteBaseUrl}" />`;
 		
 		// Cache Header
 		WebController.header = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/header.html`));
 		WebController.headerCloser = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/header-closer.html`));
 		
-		// Cache Middle
-		WebController.midStart = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/mid-start.html`));
-		WebController.midEnd = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/mid-end.html`));
+		// Cache Panels
+		WebController.panelOpen = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/panel-open.html`));
+		WebController.panelClose = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/panel-close.html`));
+		WebController.pageClose = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/page-close.html`));
 		
 		// Cache Footer
 		WebController.footer = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/footer.html`));
-		WebController.footerCloser = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/footer-closer.html`));
 	}
 }

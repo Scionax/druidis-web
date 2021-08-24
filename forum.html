@@ -58,7 +58,7 @@
 	</aside>
 	
 	<!-- Layout: Feed Section -->
-	<div id="feed-section" class="layoutMain">
+	<div id="main-section" class="layoutMain">
 		
 		<!-- Standard Feed Post -->
 		<div class="feed-wrap">
@@ -79,9 +79,12 @@
 				<p>The denial upholds lower court rulings that deemed that the school had a right to mandate vaccinations.”</p>
 			</div>
 			<a class="feed-hov" href="http://example.com">
-				<div class="feed-image">
+				<div class="feed-image" style="position:relative;">
 					<div class="feed-image-inner">
-						<amp-img layout="responsive" max-width="600" width="600" height="470" src="/public/images/delete/test.jpg"></amp-img>
+						<amp-img layout="responsive" max-width="600" width="600" height="470" src="/public/images/delete/test.jpg">
+							<!-- <div style="position:relative;bottom:0px;right:0px;background-color:white;text-align:right;z-index:5;">Some Text Here</div> -->
+						</amp-img>
+						<div class="feed-img-text" style="color:rgba(0,0,0,0.7); position:absolute; bottom:0; right:30px; border-bottom-right-radius:10px; padding:0px 5px 1px 4px; font-size:0.7em; z-index:5;">NPR.ORG</div>
 					</div>
 				</div>
 				<div class="feed-title">
@@ -202,7 +205,7 @@
 			console.log(elem.innerHTML);
 		}
 		
-		var feedSection = document.getElementById("feed-section");
+		var feedSection = document.getElementById("main-section");
 		feedSection.appendChild(copy);
 		
 		// console.log(a);

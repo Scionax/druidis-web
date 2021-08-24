@@ -31,8 +31,6 @@ export default class ForumController extends WebController {
 	// Cached HTML
 	static html = "";
 	static feedPage = "";
-	static emptyFeed = "";
-	static emptyFeedTwo = "";
 	
 	async runHandler(conn: Conn): Promise<Response> {
 		return await conn.sendHTML(ForumController.html);
@@ -44,24 +42,20 @@ export default class ForumController extends WebController {
 		
 		// Cache Extras
 		ForumController.feedPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/feed.html`));
-		ForumController.emptyFeed = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/empty-feed.html`));
-		ForumController.emptyFeedTwo = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/empty-feed-two.html`));
 		
 		// Cache Full Page
 		ForumController.html = `
 		${WebController.header}
 		${WebController.headerCloser}
-		${WebController.midStart}
+		${WebController.panelOpen}
+		${WebController.panelClose}
 		${ForumController.feedPage}
-		${WebController.midEnd}
-		${WebController.footer}
-		${ForumController.emptyFeed}
-		${ForumController.emptyFeedTwo}
+		${WebController.pageClose}
 		<script>
 		window.onload = function() {
 			loadForumData();
 		};
 		</script>
-		${WebController.footerCloser}`;
+		${WebController.footer}`;
 	}
 }

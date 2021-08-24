@@ -1,14 +1,18 @@
 import Conn from "../core/Conn.ts";
 import WebController from "./WebController.ts";
 
-export default class FeedController extends WebController {
+/*
+	URL: /post/{forum}?category={category}&url={url}
+*/
+
+export default class PostController extends WebController {
 	
 	// Cached HTML
 	static html = "";
-	static feedPage = "";
+	static postPage = "";
 	
 	async runHandler(conn: Conn): Promise<Response> {
-		return await conn.sendHTML(FeedController.html);
+		return await conn.sendHTML(PostController.html);
 	}
 	
 	static async initialize() {
@@ -16,16 +20,18 @@ export default class FeedController extends WebController {
 		const decoder = new TextDecoder("utf-8");
 		
 		// Cache Extras
-		FeedController.feedPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/feed.html`));
+		PostController.postPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/post.html`));
 		
 		// Cache Full Page
-		FeedController.html = `
+		PostController.html = `
 		${WebController.header}
-		<meta name="robots" content="noindex">
 		${WebController.headerCloser}
 		${WebController.panelOpen}
+		<div class="RInner">
+			Post in this forum.
+		</div>
 		${WebController.panelClose}
-		${FeedController.feedPage}
+		${PostController.postPage}
 		${WebController.pageClose}
 		${WebController.footer}`;
 	}

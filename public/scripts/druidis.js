@@ -69,7 +69,7 @@ function displayFeedPost(post) {
 	const feedPost = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedHov, feedSocial]);
 	
 	// Attach Created Elements to Feed Section
-	var feedSection = document.getElementById("feed-section");
+	var feedSection = document.getElementById("main-section");
 	
 	feedSection.appendChild(feedPost);
 }
