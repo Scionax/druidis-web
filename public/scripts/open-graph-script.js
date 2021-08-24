@@ -36,7 +36,7 @@ class ogMetaData {
 		this.mediaClass = null;			// Contains data related to the 'type' property.
 	}
 	
-	imageDimensions = (url) => 
+	imageDimensions = (url) => {
 		new Promise((resolve, reject) => {
 			const img = new Image();
 			
@@ -45,11 +45,10 @@ class ogMetaData {
 				resolve({ width, height });
 			}
 			
-			img.onerror = () => { reject('There was some problem with the image.'); }
-			
+			img.onerror = () => { reject('There was a problem with the image.'); }
 			img.src = url;
 		}
-	)
+	)}
 	
 	getImageSize = async () => {
 		try {
@@ -150,121 +149,158 @@ function zqqParseMetaTags(metaData) {
 	return false;
 }
 
-const submitContent = async () => {
+// const submitContent = async () => {
 	
-	// Run Meta Tag Parser
-	var metaData = new ogMetaData();
-	zqqParseMetaTags(metaData);
-	console.log(metaData);
+// 	// Run Meta Tag Parser
+// 	var metaData = new ogMetaData();
+// 	zqqParseMetaTags(metaData);
+// 	console.log(metaData);
 	
-	// Gather Config Data for this site, if possible.
-	loadSiteConfig(config);
+// 	// Gather Config Data for this site, if possible.
+// 	loadSiteConfig(config);
+	
+// 	// Submit Post
+//     const response = await fetch(host + "/post", {
+//         method: "POST",
+// 		mode: 'no-cors', // no-cors, *cors, same-origin
+// 		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+// 		credentials: 'omit', // include, *same-origin, omit
+// 		headers: {
+//             // "Content-Type": "plain/text",
+//             "Content-Type": "application/json",
+//         },
+// 		body: JSON.stringify(metaData) // body data type must match "Content-Type" header
+//     });
+    
+// 	var html = await response.json(); // For JSON Response
+//     // var html = await response.text(); // For HTML or Text Response
+// 	console.log(html);
+// }
+
+// submitContent();
+
+const fetchOtherSite = async () => {
 	
 	// Submit Post
-    const response = await fetch(host + "/post", {
-        method: "POST",
+    const response = await fetch("https://www.politico.com/news/magazine/2021/08/21/saigon-vietnam-kabul-afghanistan-505943?utm_source=pocket-newtab", {
+        method: "GET",
 		mode: 'no-cors', // no-cors, *cors, same-origin
 		cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
 		credentials: 'omit', // include, *same-origin, omit
 		headers: {
-            // "Content-Type": "plain/text",
-            "Content-Type": "application/json",
+            "Content-Type": "plain/text",
+            // "Content-Type": "application/json",
         },
-		body: JSON.stringify(metaData) // body data type must match "Content-Type" header
+		// body: JSON.stringify(metaData) // body data type must match "Content-Type" header
     });
     
-	var html = await response.json(); // For JSON Response
-    // var html = await response.text(); // For HTML or Text Response
+	// var html = await response.json(); // For JSON Response
+    var html = await response.text(); // For HTML or Text Response
 	console.log(html);
 }
 
-// submitContent();
+fetchOtherSite();
 
-function zqqSubmitPost() {
-	const category = document.getElementById("zqqCategory");
-	confirm("Submit data?");
-	console.log("Category", category.value);
-}
+fetch("https://www.politico.com/news/magazine/2021/08/21/saigon-vietnam-kabul-afghanistan-505943?utm_source=pocket-newtab")
+  .then(response => response.text())
+  .then(data => console.log(data));
 
-function createElement(element, attribute, inner) {
-	if(typeof(element) === "undefined") { return false; }
-	if(typeof(inner) === "undefined") { inner = ""; }
-	
-	const el = document.createElement(element);
-	if(typeof(attribute) === 'object') {
-		for(const attKey in attribute) {
-			el.setAttribute(attKey, attribute[attKey]);
-		}
-	}
-	
-	if(!Array.isArray(inner)) { inner = [inner]; }
-	
-	for(let k = 0; k < inner.length; k++) {
-		if(!inner[k]) { continue; }
-		if(inner[k].tagName) {
-			el.appendChild(inner[k]);
-		} else {
-			el.appendChild(document.createTextNode(inner[k]));
-		}
-	}
-	
-	return el;
-}
+const response = fetch("https://www.politico.com/news/magazine/2021/08/21/saigon-vietnam-kabul-afghanistan-505943?utm_source=pocket-newtab");
+var html = await (await response).text();
+console.log(html);
+console.log('okay');
 
-function zqqDisplayModal() {
-	
-	// Run Meta Tag Parser
-	var metaData = new ogMetaData();
-	zqqParseMetaTags(metaData);
-	console.log(metaData);
-	
-	// Prepare HTML
-	let configOpts = "";
-	
-	if(zqqConfig.categories) {
-		for(let i = 0; i < zqqConfig.categories.length; i++) {
-			const defSelect = zqqConfig.defaultCategory === zqqConfig.categories[i] ? ` selected="selected"` : "";
-			configOpts += `<option value="${zqqConfig.categories[i]}"${defSelect}>${zqqConfig.categories[i]}</option>`;
-		}
-	}
-	
-	const comments = zqqConfig.allowComments ? `
-	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Comment</div>
-	<div>
-		<textarea id="zqqComment" name="zqqComment" style="overflow:hidden;maxlength:250;border:solid 1px #bbbbbb;width:100%;min-height:120px;"></textarea>
-	</div>` : "";
-	
-	// Prepare Modal
-	const modalContent = createElement("div", {
-		"style": "position:absolute; z-index: 9999999; left:50%;top:50%;transform:translate(-50%,-50%);width:300px;min-height:400px;padding:16px;background-color:white;border-radius:10px;border:solid 1px #dddddd;",
-	}, []);		// feedTop, feedComment, feedHov, feedSocial
-	
-	modalContent.innerHTML = `
-	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;text-align:center;">${metaData.title}</div>
-	
-	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Forum</div>
-	<div><input type="text" id="zqqForum" name="zqqForum" value="${zqqConfig.forum}" readonly="readonly" style="border:solid 1px #bbbbbb;width:100%;" /></div>
-	
-	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Category</div>
-	<div>
-		<select id="zqqCategory" name="zqqCategory" style="border:solid 1px #bbbbbb;width:100%;">
-			<option value="">-- No Category --</option>
-			${configOpts}
-		</select>
-	</div>
-	${comments}
-	<div style="padding-top:25px;">
-		<button onclick="zqqSubmitPost" style="width:100%;min-height:50px;background-color:#eeeeee;border:solid 1px #bbbbbb;">Submit</button>
-	</div>
-	`;
-	
-	const modal = createElement("div", {
-		"style": "position:fixed; z-index: 999999; left:0;top:0;width:100%;height:100%;background-color: rgba(0, 0, 0, 0.5);",
-	}, [modalContent]);
-	
-	// Attach Created Elements to Feed Section
-	const body = document.body;
-	body.append(modal);
-}
+const response = fetch("https://www.politico.com/news/magazine/2021/08/21/saigon-vietnam-kabul-afghanistan-505943?utm_source=pocket-newtab");
+var html = await (await response).text();
+let doc = new DOMParser().parseFromString(html, "text/html");
+console.log(html);
+console.log(doc);
 
-zqqDisplayModal();
+// function zqqSubmitPost() {
+// 	const category = document.getElementById("zqqCategory");
+// 	confirm("Submit data?");
+// 	console.log("Category", category.value);
+// }
+
+// function createElement(element, attribute, inner) {
+// 	if(typeof(element) === "undefined") { return false; }
+// 	if(typeof(inner) === "undefined") { inner = ""; }
+	
+// 	const el = document.createElement(element);
+// 	if(typeof(attribute) === 'object') {
+// 		for(const attKey in attribute) {
+// 			el.setAttribute(attKey, attribute[attKey]);
+// 		}
+// 	}
+	
+// 	if(!Array.isArray(inner)) { inner = [inner]; }
+	
+// 	for(let k = 0; k < inner.length; k++) {
+// 		if(!inner[k]) { continue; }
+// 		if(inner[k].tagName) {
+// 			el.appendChild(inner[k]);
+// 		} else {
+// 			el.appendChild(document.createTextNode(inner[k]));
+// 		}
+// 	}
+	
+// 	return el;
+// }
+
+// function zqqDisplayModal() {
+	
+// 	// Run Meta Tag Parser
+// 	var metaData = new ogMetaData();
+// 	zqqParseMetaTags(metaData);
+// 	console.log(metaData);
+	
+// 	// Prepare HTML
+// 	let configOpts = "";
+	
+// 	if(zqqConfig.categories) {
+// 		for(let i = 0; i < zqqConfig.categories.length; i++) {
+// 			const defSelect = zqqConfig.defaultCategory === zqqConfig.categories[i] ? ` selected="selected"` : "";
+// 			configOpts += `<option value="${zqqConfig.categories[i]}"${defSelect}>${zqqConfig.categories[i]}</option>`;
+// 		}
+// 	}
+	
+// 	const comments = zqqConfig.allowComments ? `
+// 	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Comment</div>
+// 	<div>
+// 		<textarea id="zqqComment" name="zqqComment" style="overflow:hidden;maxlength:250;border:solid 1px #bbbbbb;width:100%;min-height:120px;"></textarea>
+// 	</div>` : "";
+	
+// 	// Prepare Modal
+// 	const modalContent = createElement("div", {
+// 		"style": "position:absolute; z-index: 9999999; left:50%;top:50%;transform:translate(-50%,-50%);width:300px;min-height:400px;padding:16px;background-color:white;border-radius:10px;border:solid 1px #dddddd;",
+// 	}, []);		// feedTop, feedComment, feedHov, feedSocial
+	
+// 	modalContent.innerHTML = `
+// 	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;text-align:center;">${metaData.title}</div>
+	
+// 	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Forum</div>
+// 	<div><input type="text" id="zqqForum" name="zqqForum" value="${zqqConfig.forum}" readonly="readonly" style="border:solid 1px #bbbbbb;width:100%;" /></div>
+	
+// 	<div style="font-weight:bold;font-familiy:Arial;font-size:1.2rem;padding-top:25px;">Category</div>
+// 	<div>
+// 		<select id="zqqCategory" name="zqqCategory" style="border:solid 1px #bbbbbb;width:100%;">
+// 			<option value="">-- No Category --</option>
+// 			${configOpts}
+// 		</select>
+// 	</div>
+// 	${comments}
+// 	<div style="padding-top:25px;">
+// 		<button onclick="zqqSubmitPost" style="width:100%;min-height:50px;background-color:#eeeeee;border:solid 1px #bbbbbb;">Submit</button>
+// 	</div>
+// 	`;
+	
+// 	const modal = createElement("div", {
+// 		"style": "position:fixed; z-index: 999999; left:0;top:0;width:100%;height:100%;background-color: rgba(0, 0, 0, 0.5);",
+// 	}, [modalContent]);
+	
+// 	// Attach Created Elements to Feed Section
+// 	const body = document.body;
+// 	body.append(modal);
+// }
+
+// // zqqDisplayModal();

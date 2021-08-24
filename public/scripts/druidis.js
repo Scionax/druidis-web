@@ -1,9 +1,10 @@
 
-function displayFeedPost(post) {
-	
-	// Prepare Values
-	const imgPage = Math.ceil(post.id/1000);
-	const imgPath = `${post.forum}/${imgPage}/${post.img}`;
+/*
+	Image Options:
+		.fullImg					// A fully qualified URL to an image.
+		.forum, .id, .img			// A relative path to the image based on forum+id.
+*/
+function buildPost(post) {
 	
 	// Feed Icon
 	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `/public/images/logo/logo-48.png`});
@@ -40,38 +41,60 @@ function displayFeedPost(post) {
 		feedComment.innerHTML = post.comment;
 	}
 	
+	let feedHov;
+	
 	// Feed Image
-	const feedImageImg = createElement("amp-img", {
-		"layout": "responsive", "max-width": Number(post.w), "width": Number(post.w), "height": Number(post.h),
-		"src": `https://us-east-1.linodeobjects.com/druidis-cdn/${imgPath}`
-	});
-	
-	const feedImageInner = createElement("div", {"class": "feed-image-inner"}, [feedImageImg]);
-	const feedImage = createElement("div", {"class": "feed-image"}, [feedImageInner]);
-	
-	// Feed Title
-	const feedTitleTitle = createElement("h2");
-	feedTitleTitle.innerHTML = post.title;
-	
-	const feedTitleComment = createElement("p");
-	feedTitleComment.innerHTML = post.content;
-	
-	const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle, feedTitleComment]);
-	
-	// Feed Link (Applies to Media & Title + Content)
-	const feedHov = createElement("a", {"class": "feed-hov", "href": post.url}, [feedImage, feedTitle]);
+	if(post.img || post.fullImg) {
+		let feedImageImg;
+		
+		if(post.fullImg) {
+			feedImageImg = createElement("amp-img", {
+				"layout": "responsive", "max-width": Number(post.w), "width": Number(post.w), "height": Number(post.h),
+				"src": post.fullImg
+			});
+		} else {
+			const imgPage = Math.ceil(post.id/1000);
+			const imgPath = `${post.forum}/${imgPage}/${post.img}`;
+			
+			feedImageImg = createElement("amp-img", {
+				"layout": "responsive", "max-width": Number(post.w), "width": Number(post.w), "height": Number(post.h),
+				"src": `https://us-east-1.linodeobjects.com/druidis-cdn/${imgPath}`
+			});
+		}
+		
+		const feedImageInner = createElement("div", {"class": "feed-image-inner"}, [feedImageImg]);
+		const feedImage = createElement("div", {"class": "feed-image"}, [feedImageInner]);
+		
+		// Feed Title
+		const feedTitleTitle = createElement("h2");
+		feedTitleTitle.innerHTML = post.title;
+		
+		const feedTitleComment = createElement("p");
+		feedTitleComment.innerHTML = post.content;
+		
+		const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle, feedTitleComment]);
+		
+		// Feed Link (Applies to Media & Title + Content)
+		feedHov = createElement("a", {"class": "feed-hov", "href": post.url}, [feedImage, feedTitle]);
+	}
 	
 	// Social Options
 	const feedSocial = createElement("div", {"class": "feed-social"});
 	feedSocial.innerHTML = "Social Stuff";
 	
 	// Finalize New Post Feed
-	const feedPost = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedHov, feedSocial]);
+	const feedElement = createElement("div", {"class": "feed-wrap"}, [feedTop, feedComment, feedHov, feedSocial]);
+	
+	return feedElement;
+}
+
+function displayFeedPost(post) {
+	
+	const feedElement = buildPost(post);
 	
 	// Attach Created Elements to Feed Section
-	var feedSection = document.getElementById("main-section");
-	
-	feedSection.appendChild(feedPost);
+	const feedSection = document.getElementById("main-section");
+	feedSection.appendChild(feedElement);
 }
 
 function createElement(element, attribute, inner) {
