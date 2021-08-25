@@ -38,6 +38,7 @@ header {
 .inHead {
 	position: fixed;
 	left: var(--leftPanelPos);
+	padding-left:12px;
 	width: calc(462px + 300px + 400px + 40px);
 }
 
@@ -99,7 +100,7 @@ header {
 
 /* ----- Columns ----- */
 .layoutMain {
-	flex: 1 1 1092px;
+	flex: 1 1 892px;
 	padding-top: 54px;
 	margin-left: var(--mainPanelPos);
 }
@@ -110,27 +111,11 @@ header {
 .LMenu { flex: 0 0; margin-bottom:10px; }
 
 .LOpt { padding: 8px 8px 0 8px; display: flex; flex-flow: column; }
-.LOpt > a { display: flex; flex-flow: row; flex: 0 0 48px; line-height: 22px; }
+.LOpt > a { display: flex; flex-flow: row; flex: 0 0 64px; padding:10px 4px 6px 4px; }
 .LOpt > a:hover { background-color:rgb(240, 232, 223); border-radius: 10px; }
-.LOpt > a svg { padding:10px 0 0 8px; }
-.LOpt > a > p { font-family: var(--boldFont); font-size: 17px; padding-left:10px; }
+.LOpt > a > p { font-family: var(--boldFont); font-size: 17px; padding-left:16px; }
 
 .LBox { flex: 0 0; padding:12px; margin: 8px; border-radius: 10px; background-color:#efffdd; }
-
-/* ----- Media Handling ----- */
-@media screen and (min-width:700px) and (max-width: 1196px) {
-	.HideTab { display: none; }
-	.layoutMain { margin-left: var(--leftWidth); }
-	.LWrap { all: unset; }
-}
-
-@media screen and (max-width: 699px) {
-	.HideTab, .HideMob { display: none; }
-	.Sides { display: none; }
-	.layoutMain { margin-left:0px; width: 100%; }
-}
-
-.spacer-40 { visibility: hidden; padding: 20px 0 20px 0; }
 
 /* ----- Tray ----- */
 .tray { display: flex; height:52px; }
@@ -142,8 +127,8 @@ header {
 
 /* ----- Feed Classes ----- */
 #main-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width: calc(462px + 400px + 30px); }
-.feed-contain { display:flex; flex-direction: row; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
-.feed-wrap { display: flex; flex-direction: column; padding-bottom: 16px; flex: 1 0 462px; max-width:462px; }
+.feed-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
+.feed-wrap { display: flex; flex-direction: column; padding-bottom: 16px; flex: 1 1 462px; max-width:462px; }
 .feed-hov:hover { background-color:#eeeeee; transition: all 0.5s ease-in-out; }
 .feed-image { max-width: 462px; padding: 0px; margin: 0px; }
 .feed-image-inner { padding: 0px 30px 0px 30px; margin: 0px; }
@@ -151,9 +136,41 @@ header {
 .feed-title { padding: 8px 30px 8px 30px; display:none; }
 .feed-social { padding: 8px 14px 8px 14px; display:none; }
 
-.extra-wrap { display:flex; flex-direction: column; flex: 1 0 400px; max-width:400px; padding-top:52px; margin-left:30px; }
-.extra-body { flex: 5 0; }
+.extra-wrap { display:flex; flex-direction: column; flex: 0 1 400px; max-width:400px; padding-top:52px; margin-left:30px; }
+.extra-body { flex: 2 0; }
 .extra-foot { flex: 0 1; margin-bottom:16px; }
+
+/* ----- Media Handling ----- */
+@media screen and (min-width: 900px) and (max-width: 1220px) {
+	.HideTab { display: none; }
+	.layoutMain { margin-left: var(--leftWidth); }
+	.Sides { left: 0px; }
+	.inHead { left: 0px; width: 100%; }
+}
+
+@media screen and (max-width: 900px) {
+	.HideTab, .HideMob { display: none; }
+	.Sides { left: 0px; width: 74px; }
+	.inHead { left: 0px; width: 100%; }
+}
+
+@media screen and (min-width: 700px) and (max-width: 900px) {
+	.layoutMain { margin-left: 74px; }
+	.LBox { display: none;}
+	.LOpt > a > p { display: none; }
+}
+
+@media screen and (max-width: 700px) {
+	.layoutMain { margin-left:0px; width: 100%; }
+	.Sides { display: none; }
+}
+
+@media screen and (max-width: 500px) {
+	.feed-contain { flex-wrap: wrap; }
+	.extra-wrap { padding-top: 0px; }
+}
+
+.spacer-40 { visibility: hidden; padding: 20px 0 20px 0; }
 
 /* ----- Text Classes ----- */
 h1 { margin: 1rem; }
