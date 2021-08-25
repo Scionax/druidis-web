@@ -58,33 +58,29 @@ function buildPost(post) {
 		const feedImageInner = createElement("div", {"class": "feed-image-inner"}, [feedImageImg]);
 		const feedImage = createElement("div", {"class": "feed-image"}, [feedImageInner]);
 		
-		// Feed Title
-		const feedTitleTitle = createElement("h2");
-		feedTitleTitle.innerHTML = post.title;
-		
-		const feedTitle = createElement("div", {"class": "feed-title"}, [feedTitleTitle]);
-		
 		// Feed Link (Applies to Media & Title + Content)
-		feedHov = createElement("a", {"class": "feed-hov", "href": post.url}, [feedImage, feedTitle]);
+		feedHov = createElement("a", {"class": "feed-hov", "href": post.url}, [feedImage]);
 	}
 	
-	// Social Options
-	const feedSocial = createElement("div", {"class": "feed-social"});
-	// feedSocial.innerHTML = "Social Stuff";
-	
 	// Create Feed Wrap (not including "Extra")
-	const feedWrap = createElement("div", {"class": "feed-wrap"}, [feedTop, feedHov, feedSocial]);
+	const feedWrap = createElement("div", {"class": "feed-wrap"}, [feedTop, feedHov]);
 	
-		// "Extra" Title
-		const extraTitle = createElement("h2");
-		extraTitle.innerHTML = post.title;
-	
-		// "Extra" Content
-		const extraContent = createElement("p");
-		extraContent.innerHTML = post.content;
+	// "Extra" Body
+	const extraTitle = createElement("h2");
+	extraTitle.innerHTML = post.title;
+
+	const extraContent = createElement("p");
+	extraContent.innerHTML = post.content;
 		
+	const extraBody = createElement("div", {"class": "extra-body"}, [extraTitle, extraContent]);
+	const extraWrapLink = createElement("a", {"class": "feed-hov", href: "http://example.com"}, [extraBody]);
+	
+	const extraFootP = createElement("p", {}, []);
+	extraFootP.innerHTML = "Forum / Something";
+	const extraFoot = createElement("div", {"class": "extra-foot"}, [extraFootP]);
+	
 	// Create "Extra" Wrapper
-	const extraWrap = createElement("div", {"class": "extra-wrap"}, [extraTitle, extraContent]);
+	const extraWrap = createElement("div", {"class": "extra-wrap"}, [extraWrapLink, extraFoot]);
 	
 	// Fulfill Post Container
 	const feedContainer = createElement("div", {"class": "feed-contain"}, [feedWrap, extraWrap]);
