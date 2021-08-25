@@ -106,9 +106,8 @@ header {
 
 .Sides { position: fixed; width: var(--leftWidth); left: var(--leftPanelPos); top: 48px; min-height: 100vh; z-index: 8; }
 
-/* .LWrap {} */
-.LWrap2 { display:flex; flex-flow: column wrap; }
-.LInner { flex: 0 0; }
+.LWrap { display:flex; flex-flow: column wrap; }
+.LMenu { flex: 0 0; margin-bottom:10px; }
 
 .LOpt { padding: 8px 8px 0 8px; display: flex; flex-flow: column; }
 .LOpt > a { display: flex; flex-flow: row; flex: 0 0 48px; line-height: 22px; }
@@ -116,22 +115,13 @@ header {
 .LOpt > a svg { padding:10px 0 0 8px; }
 .LOpt > a > p { font-family: var(--boldFont); font-size: 17px; padding-left:10px; }
 
-/* .RWrap { } */
-.RWrap2 { display:flex; flex-flow: column wrap; margin: 0 4px 0 4px; }
-.RInner {
-	flex: 0 0;
-	padding:12px;
-	margin:6px 2px 6px 0px;
-	border-radius: 10px;
-	background-color:#efffdd;
-}
+.LBox { flex: 0 0; padding:12px; margin: 8px; border-radius: 10px; background-color:#efffdd; }
 
 /* ----- Media Handling ----- */
 @media screen and (min-width:700px) and (max-width: 1196px) {
 	.HideTab { display: none; }
 	.layoutMain { margin-left: var(--leftWidth); }
 	.LWrap { all: unset; }
-	.RWrap { all: unset; }
 }
 
 @media screen and (max-width: 699px) {

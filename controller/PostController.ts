@@ -28,7 +28,7 @@ export default class PostController extends WebController {
 		${WebController.headerCloser}
 		<script defer src="/public/scripts/druidis-post.js"></script>
 		${WebController.panelOpen}
-		<div class="RInner">
+		<div class="LBox">
 			Post in this forum.
 		</div>
 		${WebController.panelClose}

@@ -115,7 +115,7 @@ header {
 }
 
 .LWrap2 { display:flex; flex-flow: column wrap; }
-.LInner { flex: 0 0; }
+.LMenu { flex: 0 0; }
 
 .LOpt { padding: 8px 8px 0 8px; display: flex; flex-flow: column; }
 .LOpt > a { display: flex; flex-flow: row; flex: 0 0 48px; line-height: 22px; }
@@ -134,7 +134,7 @@ header {
 
 .RWrap2 { display:flex; flex-flow: column wrap; margin: 0 4px 0 4px; }
 
-.RInner {
+.LBox {
 	flex: 0 0;
 	padding:12px;
 	margin:6px 2px 6px 0px;
