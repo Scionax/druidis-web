@@ -62,51 +62,29 @@
 		
 		<!-- Standard Feed Post -->
 		<div class="feed-wrap">
-			<div class="feed-top">
-				<div class="feed-icon"><amp-img alt="Druidis Logo" width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img></div>
-				<div class="feed-header">
-					<div class="h3">Alexandria Ocasio-Cortez</div>
-					<div class="note">NPR.ORG</div>
+			<div class="tray">
+				<div class="tray-icon">
+					<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
 				</div>
-				<div class="feed-menu">
-					<div class="feed-menu-inner">
-						<div class="feed-menu-icon">&#8226;&#8226;&#8226;</div>
-					</div>
+				<div class="tray-mid">
+					<div class="h3">Author Name or Title</div>
+					<div class="note">Source: example.com</div>
 				</div>
-			</div>
-			<div class="feed-comment">
-				<p>“Justice Amy Coney Barrett denied an emergency petition that called on the Supreme Court to block Indiana University's coronavirus vaccine mandate.</p>
-				<p>The denial upholds lower court rulings that deemed that the school had a right to mandate vaccinations.”</p>
+				<div class="tray-menu">
+					<div class="tray-menu-inner">•••</div>
+				</div>
 			</div>
 			<a class="feed-hov" href="http://example.com">
-				<div class="feed-image" style="position:relative;">
+				<div class="feed-image">
 					<div class="feed-image-inner">
-						<amp-img layout="responsive" max-width="600" width="600" height="470" src="/public/images/delete/test.jpg">
-							<!-- <div style="position:relative;bottom:0px;right:0px;background-color:white;text-align:right;z-index:5;">Some Text Here</div> -->
-						</amp-img>
-						<div class="feed-img-text" style="color:rgba(0,0,0,0.7); position:absolute; bottom:0; right:30px; border-bottom-right-radius:10px; padding:0px 5px 1px 4px; font-size:0.7em; z-index:5;">NPR.ORG</div>
+						<amp-img layout="responsive" max-width="600" width="600" height="462" src="https://us-east-1.linodeobjects.com/druidis-cdn/Gaming/1/img-local-3.webp"></amp-img>
 					</div>
 				</div>
 				<div class="feed-title">
-					<h2>Supreme Court denies challenge to Indiana University vaccine mandate</h2>
-					<p>“Justice Amy Coney Barrett denied an emergency petition that called on the Supreme Court to block Indiana University's coronavirus vaccine mandate.</p>
+					<h2>A short headline.</h2>
 				</div>
 			</a>
-			<div class="feed-social">
-				Social Stuff
-			</div>
-		</div>
-		
-		<!-- Quad Post -->
-		<div class="feed-two">
-			<div class="feed-two-card">
-				<amp-img layout="responsive" max-width="340" width="340" height="250" src="/public/images/delete/test.jpg"></amp-img>
-				<div class="h4">Share our posts on Twitter to improve your carbon rating.</div>
-			</div>
-			<div class="feed-two-card">
-				<amp-img layout="responsive" max-width="340" width="340" height="250" src="/public/images/delete/test.jpg"></amp-img>
-				<div class="h4">Check out our /forums or whatever.</div>
-			</div>
+			<div class="feed-social"></div>
 		</div>
 		
 	</div> <!-- /layoutMain -->
@@ -159,9 +137,9 @@
 </script>
 
 <div id="feed-copy" class="feed-wrap" style="display: none;">
-	<div class="feed-top">
-		<div class="feed-icon"><amp-img alt="Druidis Logo" width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img></div>
-		<div class="feed-header">
+	<div class="tray">
+		<div class="tray-icon"><amp-img alt="Druidis Logo" width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img></div>
+		<div class="tray-mid">
 			<div class="h4">Alexandria Ocasio-Cortez</div>
 			<amp-date-display datetime="2017-08-02T15:05:05.000" layout="fixed" width="360" height="20">
 				<template type="amp-mustache">
@@ -169,9 +147,9 @@
 				</template>
 			</amp-date-display>
 		</div>
-		<div class="feed-menu">
-			<div class="feed-menu-inner">
-				<div class="feed-menu-icon">&#8226;&#8226;&#8226;</div>
+		<div class="tray-menu">
+			<div class="tray-menu-inner">
+				<div class="tray-menu-icon">&#8226;&#8226;&#8226;</div>
 			</div>
 		</div>
 	</div>
@@ -197,8 +175,8 @@
 		var copy = document.getElementById("feed-copy").cloneNode(true);
 		copy.style.display = "block";
 		
-		// Locate the feed-header
-		let elements = copy.querySelectorAll('div.feed-header > div.h4');
+		// Locate the tray-mid
+		let elements = copy.querySelectorAll('div.tray-mid > div.h4');
 		elements[0].innerHTML = "BWAHAHAHAHA";
 		
 		for(let elem of elements) {

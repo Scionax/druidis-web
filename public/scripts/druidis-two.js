@@ -72,24 +72,10 @@ function buildPost(post) {
 	const feedSocial = createElement("div", {"class": "feed-social"});
 	// feedSocial.innerHTML = "Social Stuff";
 	
-	// Create Feed Wrap (not including "Extra")
-	const feedWrap = createElement("div", {"class": "feed-wrap"}, [feedTop, feedHov, feedSocial]);
+	// Finalize New Post Feed
+	const feedElement = createElement("div", {"class": "feed-wrap"}, [feedTop, feedHov, feedSocial]);
 	
-		// "Extra" Title
-		const extraTitle = createElement("h2");
-		extraTitle.innerHTML = post.title;
-	
-		// "Extra" Content
-		const extraContent = createElement("p");
-		extraContent.innerHTML = post.content;
-		
-	// Create "Extra" Wrapper
-	const extraWrap = createElement("div", {"class": "extra-wrap"}, [extraTitle, extraContent]);
-	
-	// Fulfill Post Container
-	const feedContainer = createElement("div", {"class": "feed-contain"}, [feedWrap, extraWrap]);
-	
-	return feedContainer;
+	return feedElement;
 }
 
 function displayFeedPost(post) {
