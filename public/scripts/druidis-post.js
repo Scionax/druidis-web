@@ -177,3 +177,29 @@ document.getElementById("postUrl").addEventListener("paste", () => {
 		}
 	}, 10);
 });
+
+// Draw Forum List
+function updateForumSelect() {
+	const sel = document.getElementById("forumSelect");
+	
+	for (const [key, fData] of Object.entries(config.forumSchema)) {
+	
+		// Only Find the Parent Forums
+		if(fData.parent.length !== 0) { continue; }
+		
+		const option = document.createElement("option");
+		option.value = key;
+		option.text = key;
+		option.style = "font-weight: bold; font-size: 1.2em;";
+		sel.add(option);
+		
+		for (const [childKey, value] of Object.entries(config.forumSchema[key].children)) {
+			const option = document.createElement("option");
+			option.value = childKey;
+			option.text = ` - ${childKey}`;
+			sel.add(option);
+		}
+	}
+}
+
+updateForumSelect();
