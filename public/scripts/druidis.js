@@ -3,9 +3,26 @@ const config = {};
 loadConfig();
 
 function loadConfig() {
+	
+	// .api
 	if(location.hostname.indexOf("dev") > -1) { config.api = `http://api.${location.hostname}`; }
 	else { config.api = `https://api.druidis.org`; }
+	
+	// .forumSchema
 	loadForumSchema();
+	
+	// .urlSegments
+	config.urlSegments = getUrlSegments();
+	
+	// .forum
+	config.forum = "";
+	if(config.urlSegments[0] === "forum" && config.urlSegments.length > 1) { config.forum = config.urlSegments[1]; }
+}
+
+function getUrlSegments() {
+	const url = location.pathname.split("/");
+	if(url.length > 0) { url.shift(); }
+	return url;
 }
 
 /*
@@ -14,6 +31,10 @@ function loadConfig() {
 		.forum, .id, .img			// A relative path to the image based on forum+id.
 */
 function buildPost(post) {
+	
+	// --------------------- //
+	// ----- Left Tray ----- //
+	// --------------------- //
 	
 	// Feed Icon
 	const feedIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `/public/images/logo/logo-48.png`});
@@ -42,6 +63,10 @@ function buildPost(post) {
 	
 	// Feed Top (full top line; includes Icon, Header, Menu)
 	const feedTop = createElement("div", {"class": "tray"}, [feedIcon, feedHeader, feedMenu]);
+	
+	// ------------------------ //
+	// ----- Left Section ----- //
+	// ------------------------ //
 	
 	let feedHov;
 	
@@ -74,19 +99,71 @@ function buildPost(post) {
 	// Create Feed Wrap (not including "Extra")
 	const feedWrap = createElement("div", {"class": "feed-wrap"}, [feedTop, feedHov]);
 	
+	// ---------------------- //
+	// ----- Right Tray ----- //
+	// ---------------------- //
+	
+	// // Feed Icon
+	// const rightIconImg = createElement("amp-img", {"width": 48, "height": 48, "src": `/public/images/logo/logo-48.png`});
+	// const rightIcon = createElement("div", {"class": "tray-icon"}, [rightIconImg]);
+	
+	// // Feed Header
+	// const rightHeaderTitle = createElement("div", {"class": "h3"});
+	// rightHeaderTitle.innerHTML = "Author Name or Title";
+	
+	// const rightHeaderSubNote = createElement("div", {"class": "note"});
+	
+	// try {
+	// 	const urlInfo = new URL(post.url);
+	// 	rightHeaderSubNote.innerHTML = `Source: ${urlInfo.hostname}`;
+	// } catch {
+	// 	// Do nothing
+	// }
+	
+	// const rightHeader = createElement("div", {"class": "tray-mid"}, [rightHeaderTitle, rightHeaderSubNote]);
+	
+	// // Feed Menu
+	// const rightMenuInner = createElement("div", {"class": "tray-menu-inner"});
+	// rightMenuInner.innerHTML = "&#8226;&#8226;&#8226;";
+	
+	// const rightMenu = createElement("div", {"class": "tray-menu"}, [rightMenuInner]);
+	
+	// // Feed Top (full top line; includes Icon, Header, Menu)
+	// const rightTop = createElement("div", {"class": "tray"}, [rightIcon, rightHeader, rightMenu]);
+	
+	// ------------------------- //
+	// ----- Right Section ----- //
+	// ------------------------- //
+	
 	// "Extra" Body
 	const extraTitle = createElement("h2");
 	extraTitle.innerHTML = post.title;
 
 	const extraContent = createElement("p");
 	extraContent.innerHTML = post.content;
-		
+	
 	const extraBody = createElement("div", {"class": "extra-body"}, [extraTitle, extraContent]);
 	const extraWrapLink = createElement("a", {"class": "feed-hov", href: "http://example.com"}, [extraBody]);
 	
-	const extraFootP = createElement("p", {}, []);
-	extraFootP.innerHTML = "Forum / Something";
-	const extraFoot = createElement("div", {"class": "extra-foot"}, [extraFootP]);
+	// Breadcrumbs
+	const breadcrumbs = createElement("div", {"class": "breadcrumbs"});
+	
+	// Check for forum parent. If present, link the parent in the breadcrumb.
+	const sch = config.forumSchema[post.forum];
+	
+	if(sch && sch.parent && sch.parent !== config.forum) {
+		const crumb = createElement("a", {"class": "crumb", "href": `/forum/${sch.parent}`});
+		crumb.innerHTML = sch.parent;
+		breadcrumbs.appendChild(crumb);
+	}
+	
+	if(post.forum && post.forum !== config.forum) {
+		const crumb = createElement("a", {"class": "crumb", "href": `/forum/${post.forum}`});
+		crumb.innerHTML = post.forum;
+		breadcrumbs.appendChild(crumb);
+	}
+	
+	const extraFoot = createElement("div", {"class": "extra-foot"}, [breadcrumbs]);
 	
 	// Create "Extra" Wrapper
 	const extraWrap = createElement("div", {"class": "extra-wrap"}, [extraWrapLink, extraFoot]);
@@ -195,12 +272,6 @@ function cacheForumPosts(forum, postResponse) {
 	return cachedPosts;
 }
 
-function getUrlSegments() {
-	const url = location.pathname.split("/");
-	if(url.length > 0) { url.shift(); }
-	return url;
-}
-
 function getIdRangeOfCachedPosts(cachedPosts) {
 	let high = -1;
 	let low = Infinity;
@@ -216,11 +287,10 @@ function getIdRangeOfCachedPosts(cachedPosts) {
 }
 
 async function loadFeed() {
-	const segments = getUrlSegments();
 	
 	// Forum Handling
-	if(segments.length >= 2 && segments[0] === "forum" && typeof segments[1] === "string") {
-		const forum = segments[1];
+	if(config.forum) {
+		const forum = config.forum;
 		
 		const curTime = Math.floor(Date.now() / 1000);
 		let willFetch = false;

@@ -140,7 +140,11 @@ header {
 .extra-wrap > .feed-hov { padding:0 15px 0 15px; }
 .extra-body { flex: 0 1; width:100%; }
 .extra-foot { flex: 2 0; display:flex; }
-.extra-foot > p { margin-left:15px; display:flex; align-items: flex-end; }
+/* .extra-foot > p { margin-left:15px; display:flex; align-items: flex-end; } */
+.breadcrumbs { margin-left:15px; display:flex; align-items: flex-end; flex-direction: row; }
+.crumb { margin-bottom:16px; padding:12px; border: solid 1px #d8c3aa; border-radius: 6px; }
+.crumb + .crumb { margin-left: 10px; }
+.crumb:hover { background-color:#eeeeee; transition: all 0.2s ease-in-out; }
 
 /* ----- Media Handling ----- */
 @media screen and (min-width: 900px) and (max-width: 1220px) {
