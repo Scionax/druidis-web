@@ -1,4 +1,13 @@
 
+const config = {};
+loadConfig();
+
+function loadConfig() {
+	if(location.hostname.indexOf("dev") > -1) { config.api = `http://api.${location.hostname}`; }
+	else { config.api = `https://api.druidis.org`; }
+	loadForumSchema();
+}
+
 /*
 	Image Options:
 		.fullImg					// A fully qualified URL to an image.
@@ -128,9 +137,6 @@ function createElement(element, attribute, inner) {
 //		-1 = Descending Scan. Used for auto-loading, when user is scrolling down. Uses Low ID range.
 async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
 	
-	// TODO: Improve our method of handling the domain (must work locally).
-	const domain = `http://api.${location.hostname}`;
-	
 	// Build Query String
 	let query;
 	
@@ -145,9 +151,9 @@ async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
 	}
 	
 	console.log("--- Fetching Results ---");
-	console.log(`${domain}/forum/${forum}${query}`);
+	console.log(`${config.api}/forum/${forum}${query}`);
 	
-	const response = await fetch(`${domain}/forum/${forum}${query}`);
+	const response = await fetch(`${config.api}/forum/${forum}${query}`);
 	return await response.json();
 }
 
@@ -209,35 +215,45 @@ function getIdRangeOfCachedPosts(cachedPosts) {
 	return {idHigh: high, idLow: low};
 }
 
-async function loadForumData() {
+async function loadFeed() {
 	const segments = getUrlSegments();
 	
 	// Forum Handling
 	if(segments.length >= 2 && segments[0] === "forum" && typeof segments[1] === "string") {
 		const forum = segments[1];
 		
-		// TODO: Step #1: Verify that `forum` is valid.
-		// {stuff here}
+		const curTime = Math.floor(Date.now() / 1000);
+		let willFetch = false;
+		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
+		
+		// Verify that `forum` is valid.
+		if(config.forumSchema && !config.forumSchema[forum]) {
+			console.error(`"${forum}" forum was not detected. Cannot load feed.`);
+			return;
+		}
 		
 		// Get Cached Data
 		let cachedPosts = getCachedPosts(forum);
 		let lastPull = window.localStorage.getItem(`lastPull:${forum}`);
-		const {idHigh, idLow} = getIdRangeOfCachedPosts(cachedPosts);
 		
 		// Determine what type of Request to Run
-		if(lastPull) { lastPull = Number(lastPull); }
+		lastPull = Number(lastPull) || 0;
 		
-		let willFetch = idHigh === -1 ? false : true;
-		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
+		// If we haven't located cached IDs, then idHigh will be -1, and we must fore a fetch.
+		const {idHigh, idLow} = getIdRangeOfCachedPosts(cachedPosts);
+		if(idHigh === -1) { willFetch = true; }
 		
 		// If we haven't pulled in at least five minutes, we'll make sure a new fetch happens.
-		if(willFetch === false && (!lastPull || lastPull < (Math.floor(Date.now() / 1000) - 300))) {
+		if(willFetch === false && lastPull < curTime - 300) {
 			willFetch = true;
 			scanType = 1;
 			
-			// If we haven't pulled in 12 hours, run a new fetch to ensure content isn't stale.
-			if(lastPull < (Math.floor(Date.now() / 1000) - (60 * 60 * 24))) {
+			// If we haven't pulled in 12 hours, run a "new" scan (instead of ascending) to force newest reset.
+			if(lastPull < curTime - (60 * 60 * 24)) {
 				scanType = 0;
+				
+				// Clear out stale data.
+				window.localStorage.removeItem(`posts:${forum}`);
 			}
 		}
 		
@@ -248,7 +264,7 @@ async function loadForumData() {
 				console.info(postResponse);
 				// Cache Results
 				cachedPosts = cacheForumPosts(forum, postResponse);
-				window.localStorage.setItem(`lastPull:${forum}`, Math.floor(Date.now() / 1000));
+				window.localStorage.setItem(`lastPull:${forum}`, curTime);
 			} catch {
 				console.error(`Error with response in forum: ${forum}`)
 			}
@@ -267,6 +283,43 @@ async function loadForumData() {
 		- Load the most recent 10 posts in the forum.
 		- Update the ID range that the user has retrieved.
 	*/
+}
+
+// Load Forum Data
+async function loadForumSchema() {
+	
+	const curTime = Math.floor(Date.now() / 1000);
+	
+	// Check if we already have forum data:
+	const forumSchema = window.localStorage.getItem(`forumSchema`);
+	config.forumSchema = forumSchema ? JSON.parse(forumSchema) : {};
+	
+	// If we have the forum data, but it's been stale for two days, fetch new result.
+	if(forumSchema) {
+		let lastPull = window.localStorage.getItem(`lastPull:_forumSchema`);
+		lastPull = Number(lastPull) || 0;
+		if(lastPull > (curTime - 3600 * 24 * 2)) { return; }
+	}
+	
+	// Fetch recent forum data.
+	try {
+		
+		console.log("--- Fetching /data/forums ---");
+		const response = await fetch(`${config.api}/data/forums`);
+		const json = await response.json();
+		
+		// Cache Results
+		if(json && json.d) {
+			config.forumSchema = json.d;
+			window.localStorage.setItem(`forumSchema`, JSON.stringify(config.forumSchema));
+			window.localStorage.setItem(`lastPull:_forumSchema`, curTime);
+		} else {
+			console.error("Data from /data/forums returned invalid.");
+		}
+		
+	} catch {
+		console.error(`Error with response in /data/forums.`)
+	}
 }
 
 // Main Menu Clickable

@@ -53,7 +53,7 @@ export default class ForumController extends WebController {
 		${WebController.pageClose}
 		<script>
 		window.onload = function() {
-			loadForumData();
+			loadFeed();
 		};
 		</script>
 		${WebController.footer}`;
