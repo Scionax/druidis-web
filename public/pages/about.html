@@ -1,0 +1,64 @@
+
+	<style>
+		#main-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width:680px; text-align: center;  }
+		#main-section p { font-size: 1.2rem; margin: 6px 0px 6px 0px; }
+	</style>
+	
+	<!-- Layout: About Section -->
+	<div id="main-section" class="layoutMain">
+		
+		<h1>We plants trees when people use our site</h1>
+		<p>You can plant hundreds of trees each year just by scrolling a social feed.</p>
+		<p>We're making social media environmentally healthy!</p>
+		
+		<div class="spacer-40"></div>
+		
+		<h1>Accelerating the Green Revolution</h1>
+		<p>Our mission is to heal the planet and provide healthier social content.</p>
+		<p>Our initial focus is planting trees to remove carbon from the air.</p>
+		<p>A single tree removes several thousand pounds of carbon!</p>
+		
+		<div class="spacer-40"></div>
+		
+		<h1>Volunteering &amp; Collaboration</h1>
+		<p>Passionate about helping the planet? Consider Volunteering!</p>
+		<p>Represent a trustworthy brand? Partner with us!</p>
+		
+		<!-- Firebase UI Container-->
+		<div id="firebaseui-auth-container">testsetsetset</div>
+		
+	</div>
+
+<script defer>
+
+	// Your web app's Firebase configuration
+	// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+	var firebaseConfig = {
+		apiKey: "AIzaSyBwYNUJoqwUA-XuFCOzrIbtPTeQR4fCn0Y",
+		authDomain: "test-eba48.firebaseapp.com",
+		projectId: "test-eba48",
+		storageBucket: "test-eba48.appspot.com",
+		messagingSenderId: "734526168791",
+		appId: "1:734526168791:web:2d567039eb035008e61a92",
+		measurementId: "G-4NXRQQ4730"
+	};
+	
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+	
+	// Initialize the FirebaseUI Widget using Firebase.
+	var ui = new firebaseui.auth.AuthUI(firebase.auth());
+	
+	// UI
+	ui.start('#firebaseui-auth-container', {
+		signInOptions: [
+		// List of OAuth providers supported.
+			firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+			firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+			firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+			firebase.auth.GithubAuthProvider.PROVIDER_ID
+		],
+		// Other config options...
+	});
+
+</script>
