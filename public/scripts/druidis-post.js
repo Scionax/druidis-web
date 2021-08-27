@@ -255,8 +255,14 @@ window.onload = function() {
 		if(!config.post.origImg) { alert("Requires a valid image."); return; }
 		if(!config.post.w || !config.post.h) { alert("Error: The system failed to identify image width and height."); return; }
 		
-		submitElement.value = "Submitting...";
+		// Make sure the forum is valid.
+		if(!config.forumSchema || !config.forumSchema[forumElement.value]) { alert("Error: The forum selected is considered invalid."); return; }
 		
+		// Assign the forum to our post content:
+		config.post.forum = forumElement.value;
+		
+		submitElement.value = "Submitting...";
+		console.log(config.post);
 		// Submit Content to API
 		const response = await fetch(`${config.api}/post`, {
 			method: 'POST',
@@ -264,7 +270,7 @@ window.onload = function() {
 			  'Content-Type': 'application/json'
 			  // 'Content-Type': 'application/x-www-form-urlencoded',
 			},
-			body: JSON.stringify(data)
+			body: JSON.stringify(config.post)
 		});
 		
 		// Retrieve Response
