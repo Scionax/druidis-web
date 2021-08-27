@@ -6,7 +6,7 @@
 		/* ----- FAQ Classes ----- */
 		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
 		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; }
-		.faq-wrap a:hover { background-color: rgb(196, 223, 193); transition: all 0.2s ease-in-out; }
+		.faq-wrap a:hover { background-color: var(--hoverGreen); transition: all 0.2s ease-in-out; }
 		
 		.faq { cursor: pointer; }
 		.faq-tray { display: flex; min-height:64px; padding-right: 30px; }
@@ -17,7 +17,7 @@
 		
 		.full { display: none; transition: all 0.25s ease-in-out; max-height: 0; height: auto; font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding-top: 4px; }
 		.full p { padding-bottom: 4px; }
-		.faq.open { background-color: rgb(196, 223, 193); }
+		.faq.open { background-color: var(--hoverGreen); }
 		.faq.open .full { display: block; max-height: 1600px; padding: 0px 30px 6px 48px; }
 	</style>
 	

@@ -29,33 +29,38 @@ import WebController from "./WebController.ts";
 export default class ForumController extends WebController {
 	
 	// Cached HTML
-	static html = "";
 	static feedPage = "";
+	static forumNav = "";
 	
 	async runHandler(conn: Conn): Promise<Response> {
-		return await conn.sendHTML(ForumController.html);
+		
+		// Go to /forum (navigation center)
+		if(!conn.url2) { return await conn.sendHTML(ForumController.forumNav); }
+		
+		// Load a forum feed
+		return await conn.sendHTML(ForumController.feedPage);
+		
+		// 404: No Forum Exists
+		// return await conn.send404(WebController.bad404);
 	}
 	
 	static async initialize() {
-		
+		ForumController.forumNav = await ForumController.cachePage(`/public/pages/forum-nav.html`);
+		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `<script>window.onload = function() { loadFeed(); };</script>`);
+	}
+	
+	static async cachePage(htmlPath: string, htmlScript = "") {
 		const decoder = new TextDecoder("utf-8");
+		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
 		
-		// Cache Extras
-		ForumController.feedPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/feed.html`));
-		
-		// Cache Full Page
-		ForumController.html = `
+		return `
 		${WebController.header}
 		${WebController.headerCloser}
 		${WebController.panelOpen}
 		${WebController.panelClose}
-		${ForumController.feedPage}
+		${html}
 		${WebController.pageClose}
-		<script>
-		window.onload = function() {
-			loadFeed();
-		};
-		</script>
+		${htmlScript}
 		${WebController.footer}`;
 	}
 }
