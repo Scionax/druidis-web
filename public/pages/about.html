@@ -9,10 +9,19 @@
 		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); }
 		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding: 0px 30px 6px 48px; }
 		.full p { padding-bottom: 0 0 4px 0; }
+		
+		/* TODO: Remove */
+		.breadlist { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
 	</style>
 	
 	<!-- Layout: About Section -->
 	<div id="main-section" class="layoutMain">
+		
+		<div class="breadlist">
+			<a href="/about" class="crumb highlight">About</a>
+			<a href="/about/questions" class="crumb">FAQs</a>
+			<a href="/about/volunteer" class="crumb">Volunteer</a>
+		</div>
 		
 		<div class="faq-contain">
 			<div class="faq-wrap">
