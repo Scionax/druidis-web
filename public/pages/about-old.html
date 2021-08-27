@@ -1,0 +1,176 @@
+
+	<style>
+		#about { display:flex; flex-direction: column; flex: 1; align-items: center; width: 100%; text-align: center; margin-bottom:40px; }
+		#about p { font-size: 1.2rem; margin: 6px 0px 6px 0px; }
+		
+		/* ----- FAQ Classes ----- */
+		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
+		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; }
+		.faq-wrap a:hover { background-color: var(--hoverGreen); transition: all 0.2s ease-in-out; }
+		
+		.faq { cursor: pointer; }
+		.faq-tray { display: flex; min-height:64px; padding-right: 30px; }
+		.faq-icon { width: 48px;  }
+		.faq-ask { flex: 1; padding-bottom:10px; width:100%; }
+		.faq-ask .h3 { font-size: 22px; }
+		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); }
+		
+		.full { display: none; transition: all 0.25s ease-in-out; max-height: 0; height: auto; font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding-top: 4px; }
+		.full p { padding-bottom: 4px; }
+		.faq.open { background-color: var(--hoverGreen); }
+		.faq.open .full { display: block; max-height: 1600px; padding: 0px 30px 6px 48px; }
+	</style>
+	
+	<!-- Layout: About Section -->
+	<div id="main-section" class="layoutMain">
+		
+		<div id="about">
+			<h1>We plants trees when people use our site</h1>
+			<p>You're planting trees just by scrolling a social feed.</p>
+			<p>We're making social media environmentally useful!</p>
+			
+			<div class="spacer-40"></div>
+			
+			<h1>Accelerating the Green Revolution</h1>
+			<p>We're also investing in renewables! We'll heal the planet however we can.</p>
+			
+			<div class="spacer-40"></div>
+			
+			<h1>Volunteering &amp; Collaboration</h1>
+			<p>Passionate about helping the planet with us? Volunteer!</p>
+			<p>Anyone can fill several of our most needed roles!</p>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Q: How am I removing carbon from the atmosphere while browsing?</div>
+							<div class="short">A: We spend the equivalent cost into planting trees and investing in renewable sources.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Druidis was inspired by Ecosia's ingenious business model. They use the profits from their search engine to plant trees and invest in renewables. We want to make helping the environment easy, so we made social media work for the earth!</p>
+						<p>The carbon you remove is averaged across all users on the site. Technically, some people would have a larger impact than others. But we can divide our total carbon impact by the amount of time users spend on the site.</p>
+						<p>Using this metric, Druidis has a benchmark on exactly how many trees we need to plant, or types of renewable resources we need to invest in, etc. As those sources become more efficient, or as our value increases, we can improve that impact!</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Q: How much carbon am I removing each minute?</div>
+							<div class="short">A: Over 1 pound of CO2 each minute, but this should improve over time.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Druidis is committed to removing at LEAST one pound of CO2 from the air for each minute that a user is browsing the site. However, we expect that number to rise as we become more efficient.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Q: What are you doing to prevent disinformation?</div>
+							<div class="short">A: A lot. And we plan to work with experts to ensure we're doing it well.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Powerful special interests have been spreading disinformation for decades, and social media has become a primary target. This is a serious problem, and Druidis wants to solve it.</p>
+						<p>Unlike some other social media platforms, Druidis isn't going to ban researchers from investigating the impacts of disinformation here. We *want* to work with people who are addressing the issue.</p>
+						<p>Druidis is highly curated from the top down, and anonymous accounts can't influence the primary content. This makes it MUCH harder for bad actors to spread disinformation.</p>
+						<p>We also intend to maintain features that will protect our users and equip them with the tools to track and penalize bad actors.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Q: Why can't regular users post topics on the main forums?</div>
+							<div class="short">A: To protect against disinformation, we restrict public posting in critical sections.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Druidis cares about the issue of disinformation. We are highly discouraged by other social media platforms that have chosen to insufficiently address this problem.</p>
+						<p>The issue can be solved in many ways, but to start, Druidis holds user accounts to very high accountability to post in critical areas. This prevents nearly all of the typical abuse seen on other sites.</p>
+						<p>We realize that some of these measures prevent actions that could otherwise be useful, but we're deciding to balance this tradeoff as best we can moving forward.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<!-- <div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Q: Can anyone help with this project?</div>
+							<div class="short">A: Absolutely! Literally anyone can fill some of the roles we need.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>If you're</p>
+					</div>
+				</a>
+			</div>
+		</div> -->
+		
+	</div>
+<script>
+
+// FAQ Blocks
+document.getElementById("main-section").addEventListener(`click`, event => {
+	const origin = event.target.closest("a.faq");
+
+	if(origin) {
+		// console.log(`You clicked ${origin.href}`);
+		console.log(origin);
+		// Get the next element:
+		const isOpen = origin.classList.contains("open");
+		
+		// Close all the previous FAQ's opened:
+		const fContents = document.querySelectorAll(".faq");
+		
+		for (let i = 0; i < fContents.length; i++) {
+			const fCOntent = fContents[i];
+			if(fCOntent.classList.contains("open")) {
+				fCOntent.classList.remove("open");
+			}
+		}
+		
+		// Toggle the current FAQ block:
+		if(origin.classList.contains("faq")) {
+			if(!isOpen) { origin.classList.add("open"); }
+		}
+	}
+});
+
+</script>

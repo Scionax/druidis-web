@@ -1,46 +1,19 @@
 
 	<style>
-		#about { display:flex; flex-direction: column; flex: 1; align-items: center; width: 100%; text-align: center; margin-bottom:40px; }
-		#about p { font-size: 1.2rem; margin: 6px 0px 6px 0px; }
-		
-		/* ----- FAQ Classes ----- */
 		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
-		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; }
-		.faq-wrap a:hover { background-color: var(--hoverGreen); transition: all 0.2s ease-in-out; }
-		
-		.faq { cursor: pointer; }
-		.faq-tray { display: flex; min-height:64px; padding-right: 30px; }
+		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; padding-bottom:10px; }
+		.faq-tray { display: flex; min-height:52px; padding-right: 30px; }
 		.faq-icon { width: 48px;  }
-		.faq-ask { flex: 1; padding-bottom:10px; width:100%; }
+		.faq-ask { flex: 1; width:100%; }
 		.faq-ask .h3 { font-size: 22px; }
 		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); }
-		
-		.full { display: none; transition: all 0.25s ease-in-out; max-height: 0; height: auto; font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding-top: 4px; }
-		.full p { padding-bottom: 4px; }
-		.faq.open { background-color: var(--hoverGreen); }
-		.faq.open .full { display: block; max-height: 1600px; padding: 0px 30px 6px 48px; }
+		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding: 0px 30px 6px 48px; }
+		.full p { padding-bottom: 0 0 4px 0; }
 	</style>
 	
 	<!-- Layout: About Section -->
 	<div id="main-section" class="layoutMain">
 		
-		<div id="about">
-			<h1>We plants trees when people use our site</h1>
-			<p>You're planting trees just by scrolling a social feed.</p>
-			<p>We're making social media environmentally useful!</p>
-			
-			<div class="spacer-40"></div>
-			
-			<h1>Accelerating the Green Revolution</h1>
-			<p>We're also investing in renewables! We'll heal the planet however we can.</p>
-			
-			<div class="spacer-40"></div>
-			
-			<h1>Volunteering &amp; Collaboration</h1>
-			<p>Passionate about helping the planet with us? Volunteer!</p>
-			<p>Anyone can fill several of our most needed roles!</p>
-		</div>
-		
 		<div class="faq-contain">
 			<div class="faq-wrap">
 				<a class="faq">
@@ -49,14 +22,14 @@
 							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
 						</div>
 						<div class="faq-ask">
-							<div class="h3">Q: How am I removing carbon from the atmosphere while browsing?</div>
-							<div class="short">A: We spend the equivalent cost into planting trees and investing in renewable sources.</div>
+							<div class="h3">You eliminate 1 pound of C02 for each minute you use Druidis.</div>
+							<div class="short">We plant trees and invest in renewables that offset CO2 burden.</div>
 						</div>
 					</div>
 					<div class="full">
-						<p>Druidis was inspired by Ecosia's ingenious business model. They use the profits from their search engine to plant trees and invest in renewables. We want to make helping the environment easy, so we made social media work for the earth!</p>
-						<p>The carbon you remove is averaged across all users on the site. Technically, some people would have a larger impact than others. But we can divide our total carbon impact by the amount of time users spend on the site.</p>
-						<p>Using this metric, Druidis has a benchmark on exactly how many trees we need to plant, or types of renewable resources we need to invest in, etc. As those sources become more efficient, or as our value increases, we can improve that impact!</p>
+						<p>Our mission is to make helping the planet as easy as humanly possible, so we made it possible to improve the environment just by spending time on social media.</p>
+						<p>How? Simple. For every minute you spend on Druidis, Druidis commits to removing 1 pound of CO2 from the atmosphere. You're being environmentally responsible by browsing the web!</p>
+						<p>Using this 1-minute metric, Druidis has a benchmark for how many trees we need to plant or which types of renewable resources we need to invest in.</p>
 					</div>
 				</a>
 			</div>
@@ -70,12 +43,15 @@
 							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
 						</div>
 						<div class="faq-ask">
-							<div class="h3">Q: How much carbon am I removing each minute?</div>
-							<div class="short">A: Over 1 pound of CO2 each minute, but this should improve over time.</div>
+							<div class="h3">You're also planting trees by being here, which has additional benefits!</div>
+							<div class="short">We're making social media environmentally beneficial.</div>
 						</div>
 					</div>
 					<div class="full">
-						<p>Druidis is committed to removing at LEAST one pound of CO2 from the air for each minute that a user is browsing the site. However, we expect that number to rise as we become more efficient.</p>
+						<p>Removing CO2 isn't the only benefit that you get from using our services. Your activity translates into trees getting planted.</p>
+						<p>Planting trees has several amazing benefits. It creates habitats for animals, expands and improves ecosystems, saves water, prevents pollution, prevents erosion, conserves energy, improves mental health, cleans the air, provides oxygen, and much more.</p>
+						<p>There are areas of the world that benefit even more from trees being planted, and that's where Druidis is focused on tree planting through the organizations we plant trees with.</p>
+						<p>Even though environmentalists often focus on greenhouse gases, it's important to remember that trees do a lot of good for other reasons!</p>
 					</div>
 				</a>
 			</div>
@@ -89,15 +65,55 @@
 							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
 						</div>
 						<div class="faq-ask">
-							<div class="h3">Q: What are you doing to prevent disinformation?</div>
-							<div class="short">A: A lot. And we plan to work with experts to ensure we're doing it well.</div>
+							<div class="h3">Druidis was inspired by Ecosia. A search engine that plants trees.</div>
+							<div class="short">You should check them out. They're an excellent service.</div>
 						</div>
 					</div>
 					<div class="full">
-						<p>Powerful special interests have been spreading disinformation for decades, and social media has become a primary target. This is a serious problem, and Druidis wants to solve it.</p>
-						<p>Unlike some other social media platforms, Druidis isn't going to ban researchers from investigating the impacts of disinformation here. We *want* to work with people who are addressing the issue.</p>
-						<p>Druidis is highly curated from the top down, and anonymous accounts can't influence the primary content. This makes it MUCH harder for bad actors to spread disinformation.</p>
-						<p>We also intend to maintain features that will protect our users and equip them with the tools to track and penalize bad actors.</p>
+						<p>Druidis was inspired by <a href="https://www.ecosia.org/">Ecosia</a>'s ingenious idea. Before us, they were converting the profits from their search engine into planting trees and investing in renewables. We ran with the idea, but for social media.</p>
+						<p>If you like what we've doing here, make sure to take a look at <a href="https://www.ecosia.org/">Ecosia</a>. For best results, set them to your default search engine in your browser.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Druidis is taking REAL action to prevent the spread of disinformation.</div>
+							<div class="short">We also intend to work with experts that can ensure we're doing it correctly.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Disinformation is a serious problem. Rich special interests have been spreading disinformation for decades, and social media has become a primary target.</p>
+						<p>Unlike certain other social media platforms, Druidis won't ban experts that are investigating the impacts of disinformation. We *want* to work with people who are addressing the issue.</p>
+						<p>Druidis is highly curated from the top down, and anonymous accounts can't influence the primary content. This makes it MUCH harder for bad actors to spread lies.</p>
+						<p>We also intend to maintain features that will protect our users and equip us with the tools to track and penalize bad actors.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+		<div class="faq-contain">
+			<div class="faq-wrap">
+				<a class="faq">
+					<div class="faq-tray">
+						<div class="faq-icon">
+							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
+						</div>
+						<div class="faq-ask">
+							<div class="h3">Want to help the planet? Volunteer with Druidis!</div>
+							<div class="short">There are many simple ways to help.</div>
+						</div>
+					</div>
+					<div class="full">
+						<p>Druidis has many opportunities for volunteering. These include: curating content, writing articles, moderating communities, outreach, marketing, promotion on social media, blogging, vlogging, and much more.</p>
+						<p>If you're a content creator you should consider sponsoring us, collaborating with us, or featuring us to your audience. Spreading awareness of our project can help us a lot.</p>
 					</div>
 				</a>
 			</div>
@@ -124,53 +140,7 @@
 			</div>
 		</div>
 		
-		<!-- <div class="faq-contain">
-			<div class="faq-wrap">
-				<a class="faq">
-					<div class="faq-tray">
-						<div class="faq-icon">
-							<amp-img width="48" height="48" src="/public/images/logo/logo-48.png"></amp-img>
-						</div>
-						<div class="faq-ask">
-							<div class="h3">Q: Can anyone help with this project?</div>
-							<div class="short">A: Absolutely! Literally anyone can fill some of the roles we need.</div>
-						</div>
-					</div>
-					<div class="full">
-						<p>If you're</p>
-					</div>
-				</a>
-			</div>
-		</div> -->
+		<!-- <p>The average carbon footprint is 4 tons per year globally, but is 16 tons in the US. The US has a lot of regulatory problems. Be sure to vote. These issues matter.</p> -->
+		
 		
 	</div>
-<script>
-
-// FAQ Blocks
-document.getElementById("main-section").addEventListener(`click`, event => {
-	const origin = event.target.closest("a.faq");
-
-	if(origin) {
-		// console.log(`You clicked ${origin.href}`);
-		console.log(origin);
-		// Get the next element:
-		const isOpen = origin.classList.contains("open");
-		
-		// Close all the previous FAQ's opened:
-		const fContents = document.querySelectorAll(".faq");
-		
-		for (let i = 0; i < fContents.length; i++) {
-			const fCOntent = fContents[i];
-			if(fCOntent.classList.contains("open")) {
-				fCOntent.classList.remove("open");
-			}
-		}
-		
-		// Toggle the current FAQ block:
-		if(origin.classList.contains("faq")) {
-			if(!isOpen) { origin.classList.add("open"); }
-		}
-	}
-});
-
-</script>
