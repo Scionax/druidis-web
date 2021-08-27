@@ -16,7 +16,7 @@ function loadConfig() {
 	
 	// .forum
 	config.forum = "";
-	if(config.urlSegments[0] === "forum" && config.urlSegments.length > 1) { config.forum = config.urlSegments[1]; }
+	if(config.urlSegments[0] === "forum" && config.urlSegments.length > 1) { config.forum = decodeURI(config.urlSegments[1]); }
 }
 
 function getUrlSegments() {
