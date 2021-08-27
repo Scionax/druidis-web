@@ -142,7 +142,7 @@ async function getOpenGraphData(url) {
 		
 		// Build the Post Variable
 		config.post = {
-			fullImg: metaData.image.url,
+			origImg: metaData.image.url,
 			w: metaData.image.width,
 			h: metaData.image.height,
 			title: metaData.title,
@@ -252,7 +252,7 @@ window.onload = function() {
 		// Make sure the post content is loaded:
 		if(!config.post) { alert("Submission must contain a valid post."); return; }
 		if(!config.post.title) { alert("Requires a title."); return; }
-		if(!config.post.fullImg) { alert("Requires a valid image."); return; }
+		if(!config.post.origImg) { alert("Requires a valid image."); return; }
 		if(!config.post.w || !config.post.h) { alert("Error: The system failed to identify image width and height."); return; }
 		
 		submitElement.value = "Submitting...";

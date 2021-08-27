@@ -27,7 +27,7 @@ function getUrlSegments() {
 
 /*
 	Image Options:
-		.fullImg					// A fully qualified URL to an image.
+		.origImg					// A fully qualified URL to an image.
 		.forum, .id, .img			// A relative path to the image based on forum+id.
 */
 function buildPost(post) {
@@ -71,13 +71,13 @@ function buildPost(post) {
 	let feedHov;
 	
 	// Feed Image
-	if(post.img || post.fullImg) {
+	if(post.img || post.origImg) {
 		let feedImageImg;
 		
-		if(post.fullImg) {
+		if(post.origImg) {
 			feedImageImg = createElement("amp-img", {
 				"layout": "responsive", "max-width": Number(post.w), "width": Number(post.w), "height": Number(post.h),
-				"src": post.fullImg
+				"src": post.origImg
 			});
 		} else {
 			const imgPage = Math.ceil(post.id/1000);
