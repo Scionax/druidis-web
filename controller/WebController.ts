@@ -10,9 +10,12 @@ export default class WebController {
 	static pageClose = "";
 	static footer = "";
 	
+	// Full HTML Page
+	static bad404 = "";
+	
 	// This only exists here as an interface, but is important for running RouteMap[url], which points to a WebRouter class.
 	async runHandler(conn: Conn): Promise<Response> {
-		return await conn.sendJson("Invalid Route");
+		return await conn.send404(WebController.bad404);
 	}
 	
 	static async initialize() {
@@ -31,5 +34,19 @@ export default class WebController {
 		
 		// Cache Footer
 		WebController.footer = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/html/footer.html`));
+		
+		// 404 Page
+		WebController.bad404 = `
+		${WebController.header}
+		${WebController.headerCloser}
+		${WebController.panelOpen}
+		${WebController.panelClose}
+		
+		<div id="main-section" class="layoutMain">
+			Error 404: Page does not exist.
+		</div>
+		
+		${WebController.pageClose}
+		${WebController.footer}`;
 	}
 }

@@ -37,7 +37,7 @@ export default class Conn {
 		return false;
 	}
 	
-	// return await WebController.sendJson("Path successful!");
+	// return await conn.sendHTML("<div>Some Page!</div>");
 	async sendHTML( html: string ): Promise<Response> {
 		return await new Response(html, { status: 200, headers: {
 			"Access-Control-Allow-Origin": "*",
@@ -45,7 +45,15 @@ export default class Conn {
 		}});
 	}
 	
-	// return await WebController.sendJson("Path successful!");
+	// return await conn.send404("<div>Some Page!</div>");
+	async send404( html: string ): Promise<Response> {
+		return await new Response(html, { status: 400, headers: {
+			"Access-Control-Allow-Origin": "*",
+			"Content-Type": "text/html; charset=utf-8",
+		}});
+	}
+	
+	// return await conn.sendJson("Path successful!");
 	async sendJson( jsonObj: unknown ): Promise<Response> {
 		return await new Response(JSON.stringify({ u: this.userObj, d: jsonObj }), { status: 200, headers: {
 			"Access-Control-Allow-Origin": "*",
@@ -53,7 +61,7 @@ export default class Conn {
 		}});
 	}
 	
-	// return await WebController.sendBadRequest("So that error just happened.");
+	// return await conn.sendBadRequest("So that error just happened.");
 	async sendFail( reason = "Bad Request", status = 400 ): Promise<Response> {
 		VerboseLog.verbose( "WebRouter.sendBadRequest() Error: " + reason );
 		return await new Response(null, {
