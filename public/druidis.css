@@ -58,6 +58,8 @@ header {
 	border: solid 1px var(--colorInput); border-radius: 0.4rem;
 }
 
+.inputText:hover, .submitButton:hover { cursor: pointer; box-shadow: 0.1rem 0.1rem 0.3rem var(--colorInput); }
+
 .inputText::placeholder { color: #777777; }
 .inputText:focus { outline: none; box-shadow: 0.2rem 0.2rem 0.6rem var(--colorInput); }
 .inputLabel { color: #222; }
@@ -70,6 +72,8 @@ header {
 	transition: box-shadow 200ms;
 	border: solid 1px var(--colorInput); border-radius: 0.4rem;
 }
+
+.submitButton:active { background-color: #bcdafe; }
 
 /* ----- Main Menu ----- */
 #menuMain {

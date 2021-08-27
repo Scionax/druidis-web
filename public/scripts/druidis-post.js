@@ -141,7 +141,7 @@ async function getOpenGraphData(url) {
 	if(pass) {
 		
 		// Build the Post Variable
-		const post = {
+		config.post = {
 			fullImg: metaData.image.url,
 			w: metaData.image.width,
 			h: metaData.image.height,
@@ -150,37 +150,45 @@ async function getOpenGraphData(url) {
 			url: metaData.url,
 		};
 		
-		const feedElement = buildPost(post);
+		const feedElement = buildPost(config.post);
 		
 		// Attach Created Elements to Feed Section
+		resetPostDisplay();
 		const feedSection = document.getElementById("main-section");
 		feedSection.appendChild(feedElement);
 	}
 }
 
-document.getElementById("postUrl").addEventListener("click", () => {
-	document.getElementById("postUrl").value = "";
-});
-
-document.getElementById("postUrl").addEventListener("paste", () => {
+function resetSubmissionContent() {
 	
-	// We need a timeout here, since we actually want to check AFTER the paste event.
-	setTimeout(function() {
-		const urlInput = document.getElementById("postUrl");
-		const urlInfo = new URL(urlInput.value);
-		try {
-			if(urlInfo.pathname !== "/") {
-				getOpenGraphData(urlInput.value);
-			}
-		} catch {
-			console.error("not able to make a url", urlInput.value);
+	// Reset Input Fields
+	const submitElement = document.getElementById("postSubmit");
+	const urlElement = document.getElementById("postUrl");
+	const forumElement = document.getElementById("postForum");
+	
+	urlElement.value = "";
+	forumElement.value = "";
+	submitElement.value = "Submit Post";
+	
+	resetPostDisplay();
+}
+
+function resetPostDisplay() {
+	
+	// Clear any post details:
+	const feedSection = document.getElementById("main-section");
+	for(let i = feedSection.children.length - 1; i > 0; i--) {
+		const child = feedSection.children[i];
+		
+		if(child.classList.contains("feed-contain")) {
+			feedSection.removeChild(child);
 		}
-	}, 10);
-});
+	}
+}
 
 // Draw Forum List
 function updateForumSelect() {
-	const sel = document.getElementById("forumSelect");
+	const sel = document.getElementById("postForum");
 	
 	for (const [key, fData] of Object.entries(config.forumSchema)) {
 	
@@ -193,7 +201,7 @@ function updateForumSelect() {
 		option.style = "font-weight: bold; font-size: 1.2em;";
 		sel.add(option);
 		
-		for (const [childKey, value] of Object.entries(config.forumSchema[key].children)) {
+		for (const [childKey, _value] of Object.entries(config.forumSchema[key].children)) {
 			const option = document.createElement("option");
 			option.value = childKey;
 			option.text = ` - ${childKey}`;
@@ -202,4 +210,75 @@ function updateForumSelect() {
 	}
 }
 
-updateForumSelect();
+window.onload = function() {
+	
+	updateForumSelect();
+	
+	document.getElementById("postUrl").addEventListener("click", () => {
+		document.getElementById("postUrl").value = "";
+	});
+
+	document.getElementById("postUrl").addEventListener("paste", () => {
+		
+		// We need a timeout here, since we actually want to check AFTER the paste event.
+		setTimeout(function() {
+			const urlInput = document.getElementById("postUrl");
+			const urlInfo = new URL(urlInput.value);
+			try {
+				if(urlInfo.pathname !== "/") {
+					getOpenGraphData(urlInput.value);
+				}
+			} catch {
+				console.error("not able to make a url", urlInput.value);
+			}
+		}, 10);
+	});
+
+	document.getElementById("postSubmit").addEventListener("click", async () => {
+		if(!config.api) { console.error("Unable to post. `config.api` is not set."); return; }
+		
+		const submitElement = document.getElementById("postSubmit");
+		
+		// Prevent re-submissions.
+		if(submitElement.value !== "Submit Post") { return; }
+		
+		// Make sure there is content to submit:
+		const urlElement = document.getElementById("postUrl");
+		const forumElement = document.getElementById("postForum");
+		
+		if(!urlElement.value) { alert("Must provide a URL."); return; }
+		if(!forumElement.value) { alert("Must select a forum to post to."); return; }
+		
+		// Make sure the post content is loaded:
+		if(!config.post) { alert("Submission must contain a valid post."); return; }
+		if(!config.post.title) { alert("Requires a title."); return; }
+		if(!config.post.fullImg) { alert("Requires a valid image."); return; }
+		if(!config.post.w || !config.post.h) { alert("Error: The system failed to identify image width and height."); return; }
+		
+		submitElement.value = "Submitting...";
+		
+		// Submit Content to API
+		const response = await fetch(`${config.api}/post`, {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json'
+			  // 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: JSON.stringify(data)
+		});
+		
+		// Retrieve Response
+		const data = await response.json();
+		const json = data.d;
+		
+		if(!json) { console.error("Post submission response was empty or invalid."); return; }
+		
+		alert("Post was successful!");
+		
+		// Clear All Submission Contenet
+		resetSubmissionContent();
+		
+		console.log(json);
+	});
+
+};
