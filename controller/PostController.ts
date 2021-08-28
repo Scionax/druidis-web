@@ -25,8 +25,8 @@ export default class PostController extends WebController {
 		// Cache Full Page
 		PostController.html = `
 		${WebController.header}
-		${WebController.headerCloser}
 		<script defer src="/public/scripts/druidis-post.js"></script>
+		${WebController.headerCloser}
 		${WebController.panelOpen}
 		<div class="LBox">
 			Post in this forum.

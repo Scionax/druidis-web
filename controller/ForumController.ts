@@ -46,21 +46,21 @@ export default class ForumController extends WebController {
 	
 	static async initialize() {
 		ForumController.forumNav = await ForumController.cachePage(`/public/pages/forum-nav.html`);
-		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `<script defer>window.onload = function() { loadFeed(); };</script>`);
+		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `/public/scripts/druidis-feed.js`);
 	}
 	
-	static async cachePage(htmlPath: string, htmlScript = "") {
+	static async cachePage(htmlPath: string, script = "") {
 		const decoder = new TextDecoder("utf-8");
 		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
 		
 		return `
 		${WebController.header}
+		<script defer src="${script}"></script>
 		${WebController.headerCloser}
 		${WebController.panelOpen}
 		${WebController.panelClose}
 		${html}
 		${WebController.pageClose}
-		${htmlScript}
 		${WebController.footer}`;
 	}
 }

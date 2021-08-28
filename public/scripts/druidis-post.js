@@ -190,7 +190,7 @@ function resetPostDisplay() {
 function updateForumSelect() {
 	const sel = document.getElementById("postForum");
 	
-	for (const [key, fData] of Object.entries(config.forumSchema)) {
+	for (const [key, fData] of Object.entries(config.schema)) {
 	
 		// Only Find the Parent Forums
 		if(fData.parent.length !== 0) { continue; }
@@ -201,7 +201,7 @@ function updateForumSelect() {
 		option.style = "font-weight: bold; font-size: 1.2em;";
 		sel.add(option);
 		
-		for (const [childKey, _value] of Object.entries(config.forumSchema[key].children)) {
+		for (const [childKey, _value] of Object.entries(config.schema[key].children)) {
 			const option = document.createElement("option");
 			option.value = childKey;
 			option.text = ` - ${childKey}`;
@@ -210,81 +210,77 @@ function updateForumSelect() {
 	}
 }
 
-window.onload = function() {
-	
-	updateForumSelect();
-	
-	document.getElementById("postUrl").addEventListener("click", () => {
-		document.getElementById("postUrl").value = "";
-	});
+updateForumSelect();
 
-	document.getElementById("postUrl").addEventListener("paste", () => {
-		
-		// We need a timeout here, since we actually want to check AFTER the paste event.
-		setTimeout(function() {
-			const urlInput = document.getElementById("postUrl");
-			const urlInfo = new URL(urlInput.value);
-			try {
-				if(urlInfo.pathname !== "/") {
-					getOpenGraphData(urlInput.value);
-				}
-			} catch {
-				console.error("not able to make a url", urlInput.value);
+document.getElementById("postUrl").addEventListener("click", () => {
+	document.getElementById("postUrl").value = "";
+});
+
+document.getElementById("postUrl").addEventListener("paste", () => {
+	
+	// We need a timeout here, since we actually want to check AFTER the paste event.
+	setTimeout(function() {
+		const urlInput = document.getElementById("postUrl");
+		const urlInfo = new URL(urlInput.value);
+		try {
+			if(urlInfo.pathname !== "/") {
+				getOpenGraphData(urlInput.value);
 			}
-		}, 10);
-	});
+		} catch {
+			console.error("not able to make a url", urlInput.value);
+		}
+	}, 10);
+});
 
-	document.getElementById("postSubmit").addEventListener("click", async () => {
-		if(!config.api) { console.error("Unable to post. `config.api` is not set."); return; }
-		
-		const submitElement = document.getElementById("postSubmit");
-		
-		// Prevent re-submissions.
-		if(submitElement.value !== "Submit Post") { return; }
-		
-		// Make sure there is content to submit:
-		const urlElement = document.getElementById("postUrl");
-		const forumElement = document.getElementById("postForum");
-		
-		if(!urlElement.value) { alert("Must provide a URL."); return; }
-		if(!forumElement.value) { alert("Must select a forum to post to."); return; }
-		
-		// Make sure the post content is loaded:
-		if(!config.post) { alert("Submission must contain a valid post."); return; }
-		if(!config.post.title) { alert("Requires a title."); return; }
-		if(!config.post.origImg) { alert("Requires a valid image."); return; }
-		if(!config.post.w || !config.post.h) { alert("Error: The system failed to identify image width and height."); return; }
-		
-		// Make sure the forum is valid.
-		if(!config.forumSchema || !config.forumSchema[forumElement.value]) { alert("Error: The forum selected is considered invalid."); return; }
-		
-		// Assign the forum to our post content:
-		config.post.forum = forumElement.value;
-		
-		submitElement.value = "Submitting...";
-		console.log(config.post);
-		// Submit Content to API
-		const response = await fetch(`${config.api}/post`, {
-			method: 'POST',
-			headers: {
-			  'Content-Type': 'application/json'
-			  // 'Content-Type': 'application/x-www-form-urlencoded',
-			},
-			body: JSON.stringify(config.post)
-		});
-		
-		// Retrieve Response
-		const data = await response.json();
-		const json = data.d;
-		
-		if(!json) { console.error("Post submission response was empty or invalid."); return; }
-		
-		alert("Post was successful!");
-		
-		// Clear All Submission Contenet
-		resetSubmissionContent();
-		
-		console.log(json);
+document.getElementById("postSubmit").addEventListener("click", async () => {
+	if(!config.api) { console.error("Unable to post. `config.api` is not set."); return; }
+	
+	const submitElement = document.getElementById("postSubmit");
+	
+	// Prevent re-submissions.
+	if(submitElement.value !== "Submit Post") { return; }
+	
+	// Make sure there is content to submit:
+	const urlElement = document.getElementById("postUrl");
+	const forumElement = document.getElementById("postForum");
+	
+	if(!urlElement.value) { alert("Must provide a URL."); return; }
+	if(!forumElement.value) { alert("Must select a forum to post to."); return; }
+	
+	// Make sure the post content is loaded:
+	if(!config.post) { alert("Submission must contain a valid post."); return; }
+	if(!config.post.title) { alert("Requires a title."); return; }
+	if(!config.post.origImg) { alert("Requires a valid image."); return; }
+	if(!config.post.w || !config.post.h) { alert("Error: The system failed to identify image width and height."); return; }
+	
+	// Make sure the forum is valid.
+	if(!config.schema || !config.schema[forumElement.value]) { alert("Error: The forum selected is considered invalid."); return; }
+	
+	// Assign the forum to our post content:
+	config.post.forum = forumElement.value;
+	
+	submitElement.value = "Submitting...";
+	console.log(config.post);
+	// Submit Content to API
+	const response = await fetch(`${config.api}/post`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+			// 'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		body: JSON.stringify(config.post)
 	});
-
-};
+	
+	// Retrieve Response
+	const data = await response.json();
+	const json = data.d;
+	
+	if(!json) { console.error("Post submission response was empty or invalid."); return; }
+	
+	alert("Post was successful!");
+	
+	// Clear All Submission Contenet
+	resetSubmissionContent();
+	
+	console.log(json);
+});

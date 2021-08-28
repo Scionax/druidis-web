@@ -4,19 +4,23 @@ loadConfig();
 
 function loadConfig() {
 	
-	// .api
-	if(location.hostname.indexOf("dev") > -1) { config.api = `http://api.${location.hostname}`; }
-	else { config.api = `https://api.druidis.org`; }
-	
-	// .forumSchema
-	loadForumSchema();
-	
-	// .urlSegments
-	config.urlSegments = getUrlSegments();
-	
-	// .forum
-	config.forum = "";
-	if(config.urlSegments[0] === "forum" && config.urlSegments.length > 1) { config.forum = decodeURI(config.urlSegments[1]); }
+	// Load the config if it hasn't been loaded yet.
+	if(!config.api) {
+		
+		// .api
+		if(location.hostname.indexOf("dev") > -1) { config.api = `http://api.${location.hostname}`; }
+		else { config.api = `https://api.druidis.org`; }
+		
+		// .urlSegments
+		config.urlSegments = getUrlSegments();
+		
+		// .forum
+		config.forum = "";
+		if(config.urlSegments[0] === "forum" && config.urlSegments.length > 1) { config.forum = decodeURI(config.urlSegments[1]); }
+		
+		// .schema
+		config.schema = {"News":{"children":["Business","Economic","Environment","Legal","Politics","Social Issues","World News"]},"Business":{"parent":"News"},"Economic":{"parent":"News"},"Environment":{"parent":"News"},"Legal":{"parent":"News"},"Politics":{"parent":"News"},"Social Issues":{"parent":"News"},"World News":{"parent":"News"},"Informative":{"children":["Education","History","Science","Technology"]},"Education":{"parent":"Informative"},"History":{"parent":"Informative"},"Science":{"parent":"Informative"},"Technology":{"parent":"Informative"},"Entertainment":{"children":["Books","Gaming","Movies","Music","People","Shows","Sports","Tabletop Games","Virtual Reality"]},"Books":{"parent":"Entertainment"},"Gaming":{"parent":"Entertainment"},"Movies":{"parent":"Entertainment"},"Music":{"parent":"Entertainment"},"People":{"parent":"Entertainment"},"Shows":{"parent":"Entertainment"},"Sports":{"parent":"Entertainment"},"Tabletop Games":{"parent":"Entertainment"},"Virtual Reality":{"parent":"Entertainment"},"Lifestyle":{"children":["Fashion","Fitness","Food","Health","Recipes","Social Life","Relationships","Travel"]},"Fashion":{"parent":"Lifestyle"},"Fitness":{"parent":"Lifestyle"},"Food":{"parent":"Lifestyle"},"Health":{"parent":"Lifestyle"},"Recipes":{"parent":"Lifestyle"},"Relationships":{"parent":"Lifestyle"},"Social Life":{"parent":"Lifestyle"},"Travel":{"parent":"Lifestyle"},"Fun":{"children":["Ask","Cosplay","Cute","Forum Games","Funny"]},"Ask":{"parent":"Fun"},"Cosplay":{"parent":"Fun"},"Cute":{"parent":"Fun"},"Forum Games":{"parent":"Fun"},"Funny":{"parent":"Fun"},"Creative":{"children":["Artwork","Crafts","Design","Writing"]},"Artwork":{"parent":"Creative"},"Crafts":{"parent":"Creative"},"Design":{"parent":"Creative"},"Writing":{"parent":"Creative"}};
+	}
 }
 
 function getUrlSegments() {
@@ -149,7 +153,7 @@ function buildPost(post) {
 	const breadcrumbs = createElement("div", {"class": "breadcrumbs"});
 	
 	// Check for forum parent. If present, link the parent in the breadcrumb.
-	const sch = config.forumSchema[post.forum];
+	const sch = config.schema[post.forum];
 	
 	if(sch && sch.parent && sch.parent !== config.forum) {
 		const crumb = createElement("a", {"class": "crumb", "href": `/forum/${sch.parent}`});
@@ -208,188 +212,45 @@ function createElement(element, attribute, inner) {
 	return el;
 }
 
-// scanType
-//		0 = New Scan. Finds new content, starting from the very top.
-//		1 = Ascending Scan. Used to find recent updates when your cache is already well-updated. Uses High ID range.
-//		-1 = Descending Scan. Used for auto-loading, when user is scrolling down. Uses Low ID range.
-async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
-	
-	// Build Query String
-	let query;
-	
-	if(scanType === 1) {
-		query = `?s=asc`;
-		if(idHigh > -1) { query += `&h=${idHigh}`; } 
-	} else if(scanType === -1) {
-		query = `?s=desc`;
-		if(idLow > -1) { query += `&l=${idLow}`; }
-	} else {
-		query = (idHigh > -1) ? `?h=${idHigh}` : "";
-	}
-	
-	console.log("--- Fetching Results ---");
-	console.log(`${config.api}/forum/${forum}${query}`);
-	
-	const response = await fetch(`${config.api}/forum/${forum}${query}`);
-	return await response.json();
-}
-
-function getCachedPosts(forum) {
-	let cachedPosts = window.localStorage.getItem(`posts:${forum}`);
-	
-	if(cachedPosts) {
-		try {
-			cachedPosts = JSON.parse(cachedPosts);
-		} catch {
-			cachedPosts = {};
-		}
-	} else {
-		cachedPosts = {};
-	}
-	
-	return cachedPosts;
-}
-
-function cacheForumPosts(forum, postResponse) {
-	const cachedPosts = getCachedPosts(forum);
-	const rawPosts = postResponse && postResponse.d ? postResponse.d : [];
-	
-	// Loop through all entries in the post data, and append to cached posts.
-	for(let i = 0; i < rawPosts.length; i++) {
-		const rawPost = rawPosts[i];
-		
-		// Make sure there's a valid ID
-		const id = Number(rawPost.id);
-		if(!id) { continue; }
-		
-		// Check if Cached Posts already contains this entry. Add if it doesn't.
-		if(!cachedPosts[id]) {
-			cachedPosts[id] = rawPost;
-			window.localStorage.setItem(`posts:${forum}`, JSON.stringify(cachedPosts));
-		}
-	}
-	
-	return cachedPosts;
-}
-
-function getIdRangeOfCachedPosts(cachedPosts) {
-	let high = -1;
-	let low = Infinity;
-	
-	for (const [key, post] of Object.entries(cachedPosts)) {
-		if(!post.id) { return; }
-		const num = Number(key);
-		if(num > high) { high = num; }
-		if(num < low) { low = num; }
-	}
-	
-	return {idHigh: high, idLow: low};
-}
-
-async function loadFeed() {
-	
-	// Forum Handling
-	if(config.forum) {
-		const forum = config.forum;
-		
-		const curTime = Math.floor(Date.now() / 1000);
-		let willFetch = false;
-		let scanType = 0; // 0 = new, 1 = asc, -1 = desc
-		
-		// Verify that `forum` is valid.
-		if(config.forumSchema && !config.forumSchema[forum]) {
-			console.error(`"${forum}" forum was not detected. Cannot load feed.`);
-			return;
-		}
-		
-		// Get Cached Data
-		let cachedPosts = getCachedPosts(forum);
-		let lastPull = window.localStorage.getItem(`lastPull:${forum}`);
-		
-		// Determine what type of Request to Run
-		lastPull = Number(lastPull) || 0;
-		
-		// If we haven't located cached IDs, then idHigh will be -1, and we must fore a fetch.
-		const {idHigh, idLow} = getIdRangeOfCachedPosts(cachedPosts);
-		if(idHigh === -1) { willFetch = true; }
-		
-		// If we haven't pulled in at least five minutes, we'll make sure a new fetch happens.
-		if(willFetch === false && lastPull < curTime - 300) {
-			willFetch = true;
-			scanType = 1;
-			
-			// If we haven't pulled in 12 hours, run a "new" scan (instead of ascending) to force newest reset.
-			if(lastPull < curTime - (60 * 60 * 24)) {
-				scanType = 0;
-				
-				// Clear out stale data.
-				window.localStorage.removeItem(`posts:${forum}`);
-			}
-		}
-		
-		// Fetch recent forum feed data.
-		if(willFetch) {
-			try {
-				const postResponse = await fetchForumPost(forum, idHigh, idLow, scanType);
-				console.info(postResponse);
-				// Cache Results
-				cachedPosts = cacheForumPosts(forum, postResponse);
-				window.localStorage.setItem(`lastPull:${forum}`, curTime);
-			} catch {
-				console.error(`Error with response in forum: ${forum}`)
-			}
-		}
-		
-		// Display Cached Data
-		for (const [_key, post] of Object.entries(cachedPosts)) {
-			if(!post.id) { return; }
-			displayFeedPost(post);
-		}
-	}
-	
-	/*
-		// Procedure on scrolling:
-		- Check if the user scrolls near an unknown ID range / non-cached results.
-		- Load the most recent 10 posts in the forum.
-		- Update the ID range that the user has retrieved.
-	*/
-}
-
 // Load Forum Data
-async function loadForumSchema() {
+async function loadschema() {
 	
 	const curTime = Math.floor(Date.now() / 1000);
 	
 	// Check if we already have forum data:
-	const forumSchema = window.localStorage.getItem(`forumSchema`);
-	config.forumSchema = forumSchema ? JSON.parse(forumSchema) : {};
+	const schema = window.localStorage.getItem(`schema`);
+	config.schema = schema ? JSON.parse(schema) : {};
 	
 	// If we have the forum data, but it's been stale for two days, fetch new result.
-	if(forumSchema) {
-		let lastPull = window.localStorage.getItem(`lastPull:_forumSchema`);
+	if(schema) {
+		let lastPull = window.localStorage.getItem(`lastPull:_schema`);
 		lastPull = Number(lastPull) || 0;
-		if(lastPull > (curTime - 3600 * 24 * 2)) { return; }
+		if(lastPull > (curTime - 3600 * 24 * 2)) { return true; }
 	}
 	
 	// Fetch recent forum data.
 	try {
 		
-		console.log("--- Fetching /data/forums ---");
+		console.log(`--- Fetching ${config.api}/data/forums ---`);
 		const response = await fetch(`${config.api}/data/forums`);
 		const json = await response.json();
 		
 		// Cache Results
 		if(json && json.d) {
-			config.forumSchema = json.d;
-			window.localStorage.setItem(`forumSchema`, JSON.stringify(config.forumSchema));
-			window.localStorage.setItem(`lastPull:_forumSchema`, curTime);
+			config.schema = json.d;
+			window.localStorage.setItem(`schema`, JSON.stringify(config.schema));
+			window.localStorage.setItem(`lastPull:_schema`, curTime);
 		} else {
 			console.error("Data from /data/forums returned invalid.");
+			return false;
 		}
 		
 	} catch {
 		console.error(`Error with response in /data/forums.`)
+		return false;
 	}
+	
+	return true;
 }
 
 // Main Menu Clickable
