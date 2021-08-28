@@ -9,6 +9,7 @@ export default class AboutController extends WebController {
 	static privacyPage = "";
 	static questionsPage = "";
 	static policiesPage = "";
+	static volunteerPage = "";
 	
 	// Cached CSS
 	static aboutCss = `
@@ -34,6 +35,7 @@ export default class AboutController extends WebController {
 		if(conn.url2 === "privacy") { return await conn.sendHTML(AboutController.privacyPage); }
 		if(conn.url2 === "questions") { return await conn.sendHTML(AboutController.questionsPage); }
 		if(conn.url2 === "policies") { return await conn.sendHTML(AboutController.policiesPage); }
+		if(conn.url2 === "volunteer") { return await conn.sendHTML(AboutController.volunteerPage); }
 		
 		return await conn.send404(WebController.bad404);
 	}
@@ -44,6 +46,7 @@ export default class AboutController extends WebController {
 		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`, "/about/privacy");
 		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`, "/about/questions");
 		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`, "/about/policies");
+		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/volunteer.html`, "/about/volunteer");
 	}
 	
 	static applyLink(highlightedUrl: string, url: string, title: string) {
@@ -67,6 +70,7 @@ export default class AboutController extends WebController {
 			${AboutController.applyLink(highlightedUrl, "/about", "About")}
 			${AboutController.applyLink(highlightedUrl, "/about/questions", "FAQ")}
 			${AboutController.applyLink(highlightedUrl, "/about/policies", "Policies")}
+			${AboutController.applyLink(highlightedUrl, "/about/volunteer", "Volunteer")}
 			`;
 		}
 		
