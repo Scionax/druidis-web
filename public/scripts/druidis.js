@@ -147,7 +147,7 @@ function buildPost(post) {
 	extraContent.innerHTML = post.content;
 	
 	const extraBody = createElement("div", {"class": "extra-body"}, [extraTitle, extraContent]);
-	const extraWrapLink = createElement("a", {"class": "feed-hov", href: "http://example.com"}, [extraBody]);
+	const extraWrapLink = createElement("a", {"class": "feed-hov", href: post.url}, [extraBody]);
 	
 	// Breadcrumbs
 	const breadcrumbs = createElement("div", {"class": "breadcrumbs"});
