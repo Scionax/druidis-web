@@ -212,47 +212,6 @@ function createElement(element, attribute, inner) {
 	return el;
 }
 
-// Load Forum Data
-async function loadschema() {
-	
-	const curTime = Math.floor(Date.now() / 1000);
-	
-	// Check if we already have forum data:
-	const schema = window.localStorage.getItem(`schema`);
-	config.schema = schema ? JSON.parse(schema) : {};
-	
-	// If we have the forum data, but it's been stale for two days, fetch new result.
-	if(schema) {
-		let lastPull = window.localStorage.getItem(`lastPull:_schema`);
-		lastPull = Number(lastPull) || 0;
-		if(lastPull > (curTime - 3600 * 24 * 2)) { return true; }
-	}
-	
-	// Fetch recent forum data.
-	try {
-		
-		console.log(`--- Fetching ${config.api}/data/forums ---`);
-		const response = await fetch(`${config.api}/data/forums`);
-		const json = await response.json();
-		
-		// Cache Results
-		if(json && json.d) {
-			config.schema = json.d;
-			window.localStorage.setItem(`schema`, JSON.stringify(config.schema));
-			window.localStorage.setItem(`lastPull:_schema`, curTime);
-		} else {
-			console.error("Data from /data/forums returned invalid.");
-			return false;
-		}
-		
-	} catch {
-		console.error(`Error with response in /data/forums.`)
-		return false;
-	}
-	
-	return true;
-}
-
 // Main Menu Clickable
 document.getElementById("menuClick").addEventListener("click", function() {
 	var menu = document.getElementById("menuMain");
