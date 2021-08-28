@@ -116,11 +116,8 @@ async function parseOpenGraph(doc, metaData) {
 
 async function getOpenGraphData(url) {
 	
-	// TODO: Improve our method of handling the domain (must work locally).
-	const domain = `http://api.${location.hostname}`;
-	
 	// Fetch the HTML from a given URL
-	const response = fetch(`${domain}/data/html?url=${encodeURIComponent(url)}`);
+	const response = fetch(`${config.api}/data/html?url=${encodeURIComponent(url)}`);
 	const data = await (await response).json();
 	
 	// Parse the HTML into a valid DOM
@@ -194,7 +191,7 @@ function updateForumSelect() {
 		
 		// Only Find the Parent Forums
 		if(typeof fData.parent !== "undefined") { continue; }
-		console.log(key, fData);
+		
 		const option = document.createElement("option");
 		option.value = key;
 		option.text = key;
