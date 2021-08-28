@@ -23,6 +23,7 @@ export default class AboutController extends WebController {
 		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding: 0px 30px 6px 48px; }
 		.full p { padding-bottom: 0 0 4px 0; }
 		.linkList { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
+		.highlight { background-color: var(--hoverGreenLight); }
 	</style>
 	`;
 	
@@ -38,16 +39,37 @@ export default class AboutController extends WebController {
 	}
 	
 	static async initialize() {
-		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about.html`);
-		AboutController.tosPage = await AboutController.cachePage(`/public/pages/tos.html`);
-		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`);
-		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`);
-		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`);
+		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about.html`, "/about");
+		AboutController.tosPage = await AboutController.cachePage(`/public/pages/tos.html`, "/about/tos");
+		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`, "/about/privacy");
+		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`, "/about/questions");
+		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`, "/about/policies");
 	}
 	
-	static async cachePage(htmlPath: string) {
+	static applyLink(highlightedUrl: string, url: string, title: string) {
+		if(highlightedUrl === url) { return `<a class="crumb highlight">${title}</a>`; }
+		return `<a href="${url}" class="crumb">${title}</a>`;
+	}
+	
+	static async cachePage(htmlPath: string, highlightedUrl: string) {
 		const decoder = new TextDecoder("utf-8");
 		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
+		
+		let links;
+		
+		if(highlightedUrl === "/about/tos" || highlightedUrl === "/about/privacy") { 
+			links = `
+			${AboutController.applyLink(highlightedUrl, "/about/tos", "TOS")}
+			${AboutController.applyLink(highlightedUrl, "/about/privacy", "Privacy")}
+			`;
+		} else {
+			links = `
+			${AboutController.applyLink(highlightedUrl, "/about", "About")}
+			${AboutController.applyLink(highlightedUrl, "/about/questions", "FAQ")}
+			${AboutController.applyLink(highlightedUrl, "/about/policies", "Policies")}
+			`;
+		}
+		
 		
 		return `
 		${WebController.header}
@@ -55,7 +77,16 @@ export default class AboutController extends WebController {
 		${WebController.panelOpen}
 		${WebController.panelClose}
 		${AboutController.aboutCss}
-		${html}
+		
+		<!-- Layout: About Section -->
+		<div id="main-section" class="layoutMain">
+			
+			<div class="linkList">${links}</div>
+			
+			${html}
+			
+		</div>
+	
 		${WebController.pageClose}
 		${WebController.footer}`;
 	}
