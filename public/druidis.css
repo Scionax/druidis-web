@@ -23,6 +23,7 @@ body {
 }
 
 a { text-decoration: none; color:rgb(25, 25, 25); }
+a.highlight { text-decoration: underline dotted; color:rgb(25, 25, 25); }
 
 /* Images */
 amp-img { border: none; }
@@ -108,11 +109,7 @@ header {
 }
 
 /* ----- Columns ----- */
-.layoutMain {
-	flex: 1 1 892px;
-	padding-top: 54px;
-	margin-left: var(--mainPanelPos);
-}
+.layoutMain { flex: 1 1 892px; padding-top: 54px; margin-left: var(--mainPanelPos); }
 
 .Sides { position: fixed; width: var(--leftWidth); left: var(--leftPanelPos); top: 48px; min-height: 100vh; z-index: 8; }
 

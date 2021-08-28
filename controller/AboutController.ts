@@ -15,6 +15,7 @@ export default class AboutController extends WebController {
 	static aboutCss = `
 	<style>
 		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
+		.faq-contain a { text-decoration: underline dotted; color:rgb(25, 25, 25); }
 		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; padding-bottom:10px; }
 		.faq-tray { display: flex; min-height:52px; padding-right: 30px; }
 		.faq-icon { width: 48px;  }
@@ -24,7 +25,7 @@ export default class AboutController extends WebController {
 		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding: 0px 30px 6px 48px; }
 		.full p { padding-bottom: 0 0 4px 0; }
 		.linkList { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
-		.highlight { background-color: var(--hoverGreenLight); }
+		.active { background-color: var(--hoverGreenLight); }
 	</style>
 	`;
 	
@@ -49,28 +50,28 @@ export default class AboutController extends WebController {
 		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/volunteer.html`, "/about/volunteer");
 	}
 	
-	static applyLink(highlightedUrl: string, url: string, title: string) {
-		if(highlightedUrl === url) { return `<a class="crumb highlight">${title}</a>`; }
+	static applyLink(activedUrl: string, url: string, title: string) {
+		if(activedUrl === url) { return `<a class="crumb active">${title}</a>`; }
 		return `<a href="${url}" class="crumb">${title}</a>`;
 	}
 	
-	static async cachePage(htmlPath: string, highlightedUrl: string) {
+	static async cachePage(htmlPath: string, activedUrl: string) {
 		const decoder = new TextDecoder("utf-8");
 		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
 		
 		let links;
 		
-		if(highlightedUrl === "/about/tos" || highlightedUrl === "/about/privacy") { 
+		if(activedUrl === "/about/tos" || activedUrl === "/about/privacy") { 
 			links = `
-			${AboutController.applyLink(highlightedUrl, "/about/tos", "TOS")}
-			${AboutController.applyLink(highlightedUrl, "/about/privacy", "Privacy")}
+			${AboutController.applyLink(activedUrl, "/about/tos", "TOS")}
+			${AboutController.applyLink(activedUrl, "/about/privacy", "Privacy")}
 			`;
 		} else {
 			links = `
-			${AboutController.applyLink(highlightedUrl, "/about", "About")}
-			${AboutController.applyLink(highlightedUrl, "/about/questions", "FAQ")}
-			${AboutController.applyLink(highlightedUrl, "/about/policies", "Policies")}
-			${AboutController.applyLink(highlightedUrl, "/about/volunteer", "Volunteer")}
+			${AboutController.applyLink(activedUrl, "/about", "About")}
+			${AboutController.applyLink(activedUrl, "/about/questions", "FAQ")}
+			${AboutController.applyLink(activedUrl, "/about/policies", "Policies")}
+			${AboutController.applyLink(activedUrl, "/about/volunteer", "Volunteer")}
 			`;
 		}
 		
