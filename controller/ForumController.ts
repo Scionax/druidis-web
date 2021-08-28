@@ -53,9 +53,11 @@ export default class ForumController extends WebController {
 		const decoder = new TextDecoder("utf-8");
 		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
 		
+		const addScript = script ? `<script defer src="${script}"></script>` : ``;
+		
 		return `
 		${WebController.header}
-		<script defer src="${script}"></script>
+		${addScript}
 		${WebController.headerCloser}
 		${WebController.panelOpen}
 		${WebController.panelClose}

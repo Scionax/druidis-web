@@ -191,20 +191,22 @@ function updateForumSelect() {
 	const sel = document.getElementById("postForum");
 	
 	for (const [key, fData] of Object.entries(config.schema)) {
-	
-		// Only Find the Parent Forums
-		if(fData.parent.length !== 0) { continue; }
 		
+		// Only Find the Parent Forums
+		if(typeof fData.parent !== "undefined") { continue; }
+		console.log(key, fData);
 		const option = document.createElement("option");
 		option.value = key;
 		option.text = key;
 		option.style = "font-weight: bold; font-size: 1.2em;";
 		sel.add(option);
 		
-		for (const [childKey, _value] of Object.entries(config.schema[key].children)) {
+		if(typeof fData.children === "undefined") { continue; }
+		
+		for(let i = 0; i < config.schema[key].children.length; i++) {
 			const option = document.createElement("option");
-			option.value = childKey;
-			option.text = ` - ${childKey}`;
+			option.value = config.schema[key].children[i];
+			option.text = ` - ${config.schema[key].children[i]}`;
 			sel.add(option);
 		}
 	}
