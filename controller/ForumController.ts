@@ -46,7 +46,7 @@ export default class ForumController extends WebController {
 	
 	static async initialize() {
 		ForumController.forumNav = await ForumController.cachePage(`/public/pages/forum-nav.html`);
-		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `<script>window.onload = function() { loadFeed(); };</script>`);
+		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `<script defer>window.onload = function() { loadFeed(); };</script>`);
 	}
 	
 	static async cachePage(htmlPath: string, htmlScript = "") {
