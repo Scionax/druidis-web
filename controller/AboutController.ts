@@ -46,14 +46,14 @@ export default class AboutController extends WebController {
 	}
 	
 	static async initialize() {
-		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about.html`, "");
-		AboutController.tosPage = await AboutController.cachePage(`/public/pages/tos.html`, "/tos");
-		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`, "/privacy");
-		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`, "/questions");
-		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`, "/policies");
-		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/volunteer.html`, "/volunteer");
+		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about/about.html`, "");
+		AboutController.tosPage = await AboutController.cachePage(`/public/pages/about/tos.html`, "/tos");
+		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/about/privacy.html`, "/privacy");
+		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/about/questions.html`, "/questions");
+		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/about/policies.html`, "/policies");
+		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/about/volunteer.html`, "/volunteer");
 		AboutController.siteNavPage = await AboutController.cachePage(`/public/pages/site-nav.html`, "/site-nav");
-		AboutController.partnerPage = await AboutController.cachePage(`/public/pages/partner.html`, "/partner");
+		AboutController.partnerPage = await AboutController.cachePage(`/public/pages/about/partner.html`, "/partner");
 	}
 	
 	static applyLink(activedUrl: string, url: string, title: string) {
