@@ -14,7 +14,7 @@ export default class AboutController extends WebController {
 	static partnerPage = "";
 	
 	// Cached CSS
-	static aboutCss = `
+	static css = `
 	<style>
 		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
 		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; padding-bottom:10px; }
@@ -89,7 +89,7 @@ export default class AboutController extends WebController {
 		${WebController.headerCloser}
 		${WebController.panelOpen}
 		${WebController.panelClose}
-		${AboutController.aboutCss}
+		${AboutController.css}
 		
 		<!-- Layout: About Section -->
 		<div id="main-section" class="layoutMain">
