@@ -26,12 +26,19 @@ export default class UserController extends WebController {
 		UserController.loginPage = await UserController.cachePage(`/public/pages/user/login.html`, "/login");
 	}
 	
-	static async cachePage(htmlPath: string, _activedUrl: string) {
+	static async cachePage(htmlPath: string, activeUrl: string) {
 		const decoder = new TextDecoder("utf-8");
 		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
 		
+		let script = "";
+		
+		if(activeUrl === "/login") {
+			script = ``;
+		}
+		
 		return `
 		${WebController.header}
+		${script}
 		${WebController.headerCloser}
 		${WebController.panelOpen}
 		${WebController.panelClose}

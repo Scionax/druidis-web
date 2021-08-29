@@ -11,6 +11,7 @@ import FeedController from "./controller/FeedController.ts";
 import ForumController from "./controller/ForumController.ts";
 import PostController from "./controller/PostController.ts";
 import AboutController from "./controller/AboutController.ts";
+import UserController from "./controller/UserController.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -23,6 +24,7 @@ await FeedController.initialize();
 await ForumController.initialize();
 await PostController.initialize();
 await AboutController.initialize();
+await UserController.initialize();
 
 // Custom Routing Map
 const RouteMap: { [name: string]: WebController } = {
@@ -30,6 +32,7 @@ const RouteMap: { [name: string]: WebController } = {
 	"forum": new ForumController(),
 	"post": new PostController(),
 	"about": new AboutController(),
+	"user": new UserController(),
 };
 
 // Server Routing
