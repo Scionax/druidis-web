@@ -10,12 +10,13 @@ export default class AboutController extends WebController {
 	static questionsPage = "";
 	static policiesPage = "";
 	static volunteerPage = "";
+	static siteNavPage = "";
+	static partnerPage = "";
 	
 	// Cached CSS
 	static aboutCss = `
 	<style>
 		.faq-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
-		.faq-contain a { text-decoration: underline dotted; color:rgb(25, 25, 25); }
 		.faq-wrap { display: flex; flex-direction: column; flex: 1 1; padding-bottom:10px; }
 		.faq-tray { display: flex; min-height:52px; padding-right: 30px; }
 		.faq-icon { width: 48px;  }
@@ -23,6 +24,7 @@ export default class AboutController extends WebController {
 		.faq-ask .h3 { font-size: 22px; }
 		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); }
 		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); padding: 0px 30px 6px 48px; }
+		.full a { text-decoration: underline dotted; color:rgb(25, 25, 25); }
 		.full p { padding-bottom: 0 0 4px 0; }
 		.linkList { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
 		.active { background-color: var(--hoverGreenLight); }
@@ -37,22 +39,26 @@ export default class AboutController extends WebController {
 		if(conn.url2 === "questions") { return await conn.sendHTML(AboutController.questionsPage); }
 		if(conn.url2 === "policies") { return await conn.sendHTML(AboutController.policiesPage); }
 		if(conn.url2 === "volunteer") { return await conn.sendHTML(AboutController.volunteerPage); }
+		if(conn.url2 === "site-nav") { return await conn.sendHTML(AboutController.siteNavPage); }
+		if(conn.url2 === "partner") { return await conn.sendHTML(AboutController.partnerPage); }
 		
 		return await conn.send404(WebController.bad404);
 	}
 	
 	static async initialize() {
-		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about.html`, "/about");
-		AboutController.tosPage = await AboutController.cachePage(`/public/pages/tos.html`, "/about/tos");
-		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`, "/about/privacy");
-		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`, "/about/questions");
-		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`, "/about/policies");
-		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/volunteer.html`, "/about/volunteer");
+		AboutController.aboutPage = await AboutController.cachePage(`/public/pages/about.html`, "");
+		AboutController.tosPage = await AboutController.cachePage(`/public/pages/tos.html`, "/tos");
+		AboutController.privacyPage = await AboutController.cachePage(`/public/pages/privacy.html`, "/privacy");
+		AboutController.questionsPage = await AboutController.cachePage(`/public/pages/questions.html`, "/questions");
+		AboutController.policiesPage = await AboutController.cachePage(`/public/pages/policies.html`, "/policies");
+		AboutController.volunteerPage = await AboutController.cachePage(`/public/pages/volunteer.html`, "/volunteer");
+		AboutController.siteNavPage = await AboutController.cachePage(`/public/pages/site-nav.html`, "/site-nav");
+		AboutController.partnerPage = await AboutController.cachePage(`/public/pages/partner.html`, "/partner");
 	}
 	
 	static applyLink(activedUrl: string, url: string, title: string) {
 		if(activedUrl === url) { return `<a class="crumb active">${title}</a>`; }
-		return `<a href="${url}" class="crumb">${title}</a>`;
+		return `<a href="/about${url}" class="crumb">${title}</a>`;
 	}
 	
 	static async cachePage(htmlPath: string, activedUrl: string) {
@@ -61,20 +67,22 @@ export default class AboutController extends WebController {
 		
 		let links;
 		
-		if(activedUrl === "/about/tos" || activedUrl === "/about/privacy") { 
-			links = `
-			${AboutController.applyLink(activedUrl, "/about/tos", "TOS")}
-			${AboutController.applyLink(activedUrl, "/about/privacy", "Privacy")}
-			`;
+		if(activedUrl === "/site-nav") {
+			links = ``;
+		} else if(activedUrl === "/tos" || activedUrl === "/privacy") { 
+			links = `<div class="linkList">
+			${AboutController.applyLink(activedUrl, "/tos", "TOS")}
+			${AboutController.applyLink(activedUrl, "/privacy", "Privacy")}
+			</div>`;
 		} else {
-			links = `
-			${AboutController.applyLink(activedUrl, "/about", "About")}
-			${AboutController.applyLink(activedUrl, "/about/questions", "FAQ")}
-			${AboutController.applyLink(activedUrl, "/about/policies", "Policies")}
-			${AboutController.applyLink(activedUrl, "/about/volunteer", "Volunteer")}
-			`;
+			links = `<div class="linkList">
+			${AboutController.applyLink(activedUrl, "", "About")}
+			${AboutController.applyLink(activedUrl, "/questions", "FAQ")}
+			${AboutController.applyLink(activedUrl, "/policies", "Policies")}
+			${AboutController.applyLink(activedUrl, "/volunteer", "Volunteer")}
+			${AboutController.applyLink(activedUrl, "/partner", "Partner")}
+			</div>`;
 		}
-		
 		
 		return `
 		${WebController.header}
@@ -85,11 +93,8 @@ export default class AboutController extends WebController {
 		
 		<!-- Layout: About Section -->
 		<div id="main-section" class="layoutMain">
-			
-			<div class="linkList">${links}</div>
-			
+			${links}
 			${html}
-			
 		</div>
 	
 		${WebController.pageClose}
