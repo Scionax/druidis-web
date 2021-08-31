@@ -35,9 +35,7 @@ export default class UserController extends WebController {
 		
 		let script = "";
 		
-		if(activeUrl === "/login") {
-			script = ``;
-		} else if(activeUrl === "/sign-up") {
+		if(activeUrl === "/login" || activeUrl === "/sign-up") {
 			script = `<script src="/public/scripts/druidis-login.js" defer></script>`;
 		}
 		
