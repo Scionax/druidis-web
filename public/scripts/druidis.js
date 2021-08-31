@@ -9,6 +9,7 @@ function loadConfig() {
 		
 		// .api
 		if(location.hostname.indexOf("dev") > -1) { config.api = `http://api.${location.hostname}`; }
+		else if(location.hostname.indexOf("local") > -1) { config.api = `http://localhost:8080`; }
 		else { config.api = `https://api.druidis.org`; }
 		
 		// .urlSegments

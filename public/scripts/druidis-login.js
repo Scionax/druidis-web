@@ -1,22 +1,14 @@
 
-function resetSubmissionContent() {
+function displayJoinErrors(errors) {
+	const info = document.getElementById("signUpAlerts");
+	info.innerHTML = "";
 	
-	// Reset Input Fields
-	const elUsername = document.getElementById("username");
-	const elEmail = document.getElementById("email");
-	const elPassword = document.getElementById("password");
-	const elTos = document.getElementById("tos");
-	const elPrivacy = document.getElementById("privacy");
-	const elSubmit = document.getElementById("signUpSubmit");
-	
-	elUsername.value = "";
-	elEmail.value = "";
-	elPassword.value = "";
-	elTos.checked = false;
-	elPrivacy.checked = false;
-	elSubmit.value = "Sign Up";
-	
-	resetPostDisplay();
+	// Loop through each error and display it in its own alert field.
+	for(let i = 0;i < errors.length;i++) {
+		const alert = createElement("div", {"class": "alert alert-fail"});
+		alert.innerHTML = errors[i];
+		info.appendChild(alert);
+	}
 }
 
 document.getElementById("signUpSubmit").addEventListener("click", async () => {
@@ -42,12 +34,17 @@ document.getElementById("signUpSubmit").addEventListener("click", async () => {
 		"privacy": elPrivacy.checked ? true : false,
 	};
 	
-	if(!data.username) { alert("Must provide a username."); return; }
-	if(data.username.length < 6) { alert("Username for new users must be between 6 and 16 characters."); return; }
-	if(!data.email || !data.email.match(/^\S+@\S+\.\S+$/)) { alert("Must provide a valid email."); return; }
-	if(!data.pass || data.pass.length < 8) { alert("Password must be at least eight characters."); return; }
-	if(!data.tos.checked) { alert("Must agree to the Terms of Service."); return; }
-	if(!data.privacy.checked) { alert("Must agree to the Privacy Policy."); return; }
+	const errors = [];
+	
+	if(!data.username) { errors.push("Must provide a username."); }
+	else if(data.username.length < 6) { errors.push("Username must be between 6 and 16 characters."); }
+	if(!data.email || !data.email.match(/^\S+@\S+\.\S+$/)) { errors.push("Must provide a valid email."); }
+	if(!data.pass || data.pass.length < 8) { errors.push("Password must be at least eight characters."); }
+	if(!data.tos) { errors.push("Must agree to the Terms of Service."); }
+	if(!data.privacy) { errors.push("Must agree to the Privacy Policy."); }
+	
+	displayJoinErrors(errors);
+	if(errors.length > 0) { return; }
 	
 	elSubmit.value = "Submitting...";
 	
@@ -65,7 +62,11 @@ document.getElementById("signUpSubmit").addEventListener("click", async () => {
 	const respData = await response.json();
 	const json = respData.d;
 	
-	if(!json) { console.error("Post submission response was empty or invalid."); return; }
+	if(!json) {
+		errors.push("Error: Server response was invalid. May need to contact the webmaster.");
+		displayJoinErrors(errors);
+		return;
+	}
 	
 	console.log(json);
 });
