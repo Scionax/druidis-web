@@ -6,6 +6,7 @@ export default class UserController extends WebController {
 	// Cached HTML
 	static userPage = "";
 	static loginPage = "";
+	static signupPage = "";
 	
 	// Cached CSS
 	static css = `
@@ -17,6 +18,7 @@ export default class UserController extends WebController {
 		
 		// if(!conn.url2) { return await conn.sendHTML(UserController.userPage); }
 		if(conn.url2 === "login") { return await conn.sendHTML(UserController.loginPage); }
+		if(conn.url2 === "sign-up") { return await conn.sendHTML(UserController.signupPage); }
 		
 		return await conn.send404(WebController.bad404);
 	}
@@ -24,6 +26,7 @@ export default class UserController extends WebController {
 	static async initialize() {
 		// UserController.userPage = await UserController.cachePage(`/public/pages/user/user.html`, "");
 		UserController.loginPage = await UserController.cachePage(`/public/pages/user/login.html`, "/login");
+		UserController.signupPage = await UserController.cachePage(`/public/pages/user/sign-up.html`, "/sign-up");
 	}
 	
 	static async cachePage(htmlPath: string, activeUrl: string) {
@@ -34,6 +37,8 @@ export default class UserController extends WebController {
 		
 		if(activeUrl === "/login") {
 			script = ``;
+		} else if(activeUrl === "/sign-up") {
+			script = `<script src="/public/scripts/druidis-login.js" defer></script>`;
 		}
 		
 		return `

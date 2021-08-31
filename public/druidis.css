@@ -70,6 +70,9 @@ header {
 .inputText:focus { outline: none; box-shadow: 0.2rem 0.2rem 0.6rem var(--colorInput); }
 .inputLabel { color: #222; }
 
+.inputCheck { width: 32px; height: 32px; }
+[type="checkbox"] { vertical-align:middle; }
+
 .submitButton {
 	display: block;
 	width: 98%; margin:0; padding: 0.8rem 1.6rem;
