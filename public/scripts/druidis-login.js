@@ -22,17 +22,17 @@ if(elLogin) {
 		if(elLogin.value !== "Log In") { return; }
 		
 		// Make sure there is content to submit:
-		const elUsername = document.getElementById("username");
-		const elPassword = document.getElementById("password");
+		const elUsername = document.getElementById("user");
+		const elPassword = document.getElementById("pass");
 		
 		const data = {
-			"username": elUsername.value,
+			"user": elUsername.value,
 			"pass": elPassword.value,
 		};
 		
 		const errors = [];
 		
-		if(!data.username) { errors.push("Please provide a username."); }
+		if(!data.user) { errors.push("Please provide a username."); }
 		if(!data.pass) { errors.push("Please provide a password."); }
 		
 		displayJoinErrors(errors);
@@ -41,7 +41,7 @@ if(elLogin) {
 		elLogin.value = "Submitting...";
 		
 		// Submit Content to API
-		const response = await fetch(`${config.api}/data/test`, {
+		const response = await fetch(`${config.api}/user/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -82,14 +82,14 @@ if(elSignUp) {
 		if(elSignUp.value !== "Sign Up") { return; }
 		
 		// Make sure there is content to submit:
-		const elUsername = document.getElementById("username");
+		const elUsername = document.getElementById("user");
 		const elEmail = document.getElementById("email");
-		const elPassword = document.getElementById("password");
+		const elPassword = document.getElementById("pass");
 		const elTos = document.getElementById("tos");
 		const elPrivacy = document.getElementById("privacy");
 		
 		const data = {
-			"username": elUsername.value,
+			"user": elUsername.value,
 			"email": elEmail.value,
 			"pass": elPassword.value,
 			"tos": elTos.checked ? true : false,
@@ -99,7 +99,7 @@ if(elSignUp) {
 		const errors = [];
 		
 		if(!data.username) { errors.push("Must provide a username."); }
-		else if(data.username.length < 6) { errors.push("Username must be between 6 and 16 characters."); }
+		else if(data.user.length < 6) { errors.push("Username must be between 6 and 16 characters."); }
 		if(!data.email || !data.email.match(/^\S+@\S+\.\S+$/)) { errors.push("Must provide a valid email."); }
 		if(!data.pass || data.pass.length < 8) { errors.push("Password must be at least eight characters."); }
 		if(!data.tos) { errors.push("Must agree to the Terms of Service."); }
@@ -111,7 +111,7 @@ if(elSignUp) {
 		elSignUp.value = "Submitting...";
 		
 		// Submit Content to API
-		const response = await fetch(`${config.api}/data/test`, {
+		const response = await fetch(`${config.api}/user/sign-up`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
