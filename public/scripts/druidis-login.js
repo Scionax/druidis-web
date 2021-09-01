@@ -45,7 +45,7 @@ if(elLogin) {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				// 'Credentials': 'include', // Needed or Cookies will not be sent.
+				'Credentials': 'include', // Needed or Cookies will not be sent.
 				// 'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: JSON.stringify(data)
@@ -117,7 +117,7 @@ if(elSignUp) {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				// 'Credentials': 'include', // Needed or Cookies will not be sent.
+				'Credentials': 'include', // Needed or Cookies will not be sent.
 				// 'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: JSON.stringify(data)

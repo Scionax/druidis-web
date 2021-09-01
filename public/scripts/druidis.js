@@ -8,8 +8,8 @@ function loadConfig() {
 	if(!config.api) {
 		
 		// .api
-		if(location.hostname.indexOf("local") > -1) { config.api = `http://localhost:8080`; }
-		else { config.api = `https://api.druidis.org`; }
+		if(location.hostname.indexOf("local") > -1) { config.api = `http://localhost/api`; }
+		else { config.api = `https://druidis.org/api`; }
 		
 		// .urlSegments
 		config.urlSegments = getUrlSegments();

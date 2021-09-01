@@ -117,7 +117,11 @@ async function parseOpenGraph(doc, metaData) {
 async function getOpenGraphData(url) {
 	
 	// Fetch the HTML from a given URL
-	const response = fetch(`${config.api}/data/html?url=${encodeURIComponent(url)}`);
+	const response = fetch(`${config.api}/data/html?url=${encodeURIComponent(url)}`, { headers:{
+		'Content-Type': 'application/json',
+		'Credentials': 'include', // Needed or Cookies will not be sent.
+		// 'Content-Type': 'application/x-www-form-urlencoded',
+	}});
 	const data = await (await response).json();
 	
 	// Parse the HTML into a valid DOM
@@ -265,7 +269,7 @@ document.getElementById("postSubmit").addEventListener("click", async () => {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			// 'Credentials': 'include', // Needed or Cookies will not be sent.
+			'Credentials': 'include', // Needed or Cookies will not be sent.
 			// 'Content-Type': 'application/x-www-form-urlencoded',
 		},
 		body: JSON.stringify(config.post)

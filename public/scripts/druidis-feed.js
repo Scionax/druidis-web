@@ -21,7 +21,11 @@ async function fetchForumPost(forum, idHigh = -1, idLow = -1, scanType = 1) {
 	console.log("--- Fetching Results ---");
 	console.log(`${config.api}/forum/${forum}${query}`);
 	
-	const response = await fetch(`${config.api}/forum/${forum}${query}`);
+	const response = await fetch(`${config.api}/forum/${forum}${query}`, { headers:{
+		'Content-Type': 'application/json',
+		'Credentials': 'include', // Needed or Cookies will not be sent.
+		// 'Content-Type': 'application/x-www-form-urlencoded',
+	}});
 	return await response.json();
 }
 
