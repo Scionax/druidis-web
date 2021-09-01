@@ -16,8 +16,9 @@ export default class Conn {
 	public success = true;
 	public errorReason = "";
 	
-	// User Object
+	// User Data
 	public userObj = {};
+	public id = 0;			// The user's [expected] ID (NOTE: This is not a verified ID, only what the cookie indicates).
 	
 	constructor(requestEvent: Deno.RequestEvent) {
 		this.requestEvent = requestEvent;
@@ -37,10 +38,26 @@ export default class Conn {
 		return false;
 	}
 	
+	// ----- Process Active Users ----- //
+	
+	processActiveUser() {
+		
+		// Get the 'login' cookie from User, if applicable.
+		const cookies = this.cookieGet();
+		if(!cookies.login) { return; }
+		
+		// Recover the ID from the cookie (note: doesn't guarantee that it's valid).
+		const log = cookies.login.split(".");
+		this.id = Number(log[0]) || 0;
+	}
+	
+	// ------------------------- //
+	// ----- Web Responses ----- //
+	// ------------------------- //
+	
 	// return await conn.sendHTML("<div>Some Page!</div>");
 	async sendHTML( html: string ): Promise<Response> {
 		return await new Response(html, { status: 200, headers: {
-			"Access-Control-Allow-Origin": "*",
 			"Content-Type": "text/html; charset=utf-8",
 		}});
 	}
@@ -48,7 +65,6 @@ export default class Conn {
 	// return await conn.send404("<div>Some Page!</div>");
 	async send404( html: string ): Promise<Response> {
 		return await new Response(html, { status: 400, headers: {
-			"Access-Control-Allow-Origin": "*",
 			"Content-Type": "text/html; charset=utf-8",
 		}});
 	}
@@ -56,7 +72,6 @@ export default class Conn {
 	// return await conn.sendJson("Path successful!");
 	async sendJson( jsonObj: unknown ): Promise<Response> {
 		return await new Response(JSON.stringify({ u: this.userObj, d: jsonObj }), { status: 200, headers: {
-			"Access-Control-Allow-Origin": "*",
 			"Content-Type": "application/json; charset=utf-8",
 		}});
 	}
@@ -68,8 +83,26 @@ export default class Conn {
 			status: status,
 			statusText: reason,
 			headers: {
-				"Access-Control-Allow-Origin": "*",
 				"Content-Type": "application/json; charset=utf-8",
 		}});
+	}
+	
+	// ----- Cookie Handling ----- //
+	
+	cookieGet(): Record<string, string> {
+		const cookie = this.request.headers.get("cookie");
+		if (cookie != null) {
+			const out: Record<string, string> = {};
+			const c = cookie.split(";");
+			for (const kv of c) {
+				const [cookieKey, ...cookieVal] = kv.split("=");
+				if(cookieKey != null) {
+					const key = cookieKey.trim();
+					out[key] = cookieVal.join("=");
+				}
+			}
+			return out;
+		}
+		return {};
 	}
 }

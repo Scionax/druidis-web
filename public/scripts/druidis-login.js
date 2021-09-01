@@ -67,9 +67,7 @@ if(elLogin) {
 		// Success
 		
 		// TODO: Redirect, Process, etc.
-		// document.cookie = `login="${json}"; Max-Age=86400; HttpOnly;`;
-		
-		console.log(json);
+		console.log("Success. Redirect from here.");
 	});
 }
 
