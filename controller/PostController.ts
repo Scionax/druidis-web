@@ -8,32 +8,14 @@ import WebController from "./WebController.ts";
 export default class PostController extends WebController {
 	
 	// Cached HTML
-	static html = "";
 	static postPage = "";
 	
 	async runHandler(conn: Conn): Promise<Response> {
-		return await conn.sendHTML(PostController.html);
+		return await conn.sendHTML(PostController.postPage);
 	}
 	
 	static async initialize() {
-		
 		const decoder = new TextDecoder("utf-8");
-		
-		// Cache Extras
 		PostController.postPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/post.html`));
-		
-		// Cache Full Page
-		PostController.html = `
-		${WebController.header}
-		<script defer src="/public/scripts/druidis-post.js"></script>
-		${WebController.headerCloser}
-		${WebController.panelOpen}
-		<div class="LBox">
-			Post in this forum.
-		</div>
-		${WebController.panelClose}
-		${PostController.postPage}
-		${WebController.pageClose}
-		${WebController.footer}`;
 	}
 }

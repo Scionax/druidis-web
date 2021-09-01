@@ -42,7 +42,7 @@ export default class AboutController extends WebController {
 		if(conn.url2 === "site-nav") { return await conn.sendHTML(AboutController.siteNavPage); }
 		if(conn.url2 === "partner") { return await conn.sendHTML(AboutController.partnerPage); }
 		
-		return await conn.send404(WebController.bad404);
+		return await conn.send404();
 	}
 	
 	static async initialize() {
@@ -85,19 +85,8 @@ export default class AboutController extends WebController {
 		}
 		
 		return `
-		${WebController.header}
-		${WebController.headerCloser}
-		${WebController.panelOpen}
-		${WebController.panelClose}
 		${AboutController.css}
-		
-		<!-- Layout: About Section -->
-		<div id="main-section" class="layoutMain">
-			${links}
-			${html}
-		</div>
-	
-		${WebController.pageClose}
-		${WebController.footer}`;
+		${links}
+		${html}`;
 	}
 }

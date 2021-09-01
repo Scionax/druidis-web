@@ -40,6 +40,8 @@ async function handle(conn: Deno.Conn) {
 	const httpConn = Deno.serveHttp(conn);
 	
 	for await (const requestEvent of httpConn) {
+		
+		// Note: If we're loading a /page url, it means we only send the inner page content; not the full HTML.
 		const conn = new Conn(requestEvent);
 		
 		// Process the Active User

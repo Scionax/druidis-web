@@ -41,28 +41,12 @@ export default class ForumController extends WebController {
 		return await conn.sendHTML(ForumController.feedPage);
 		
 		// 404: No Forum Exists
-		// return await conn.send404(WebController.bad404);
+		// return await conn.send404();
 	}
 	
 	static async initialize() {
-		ForumController.forumNav = await ForumController.cachePage(`/public/pages/forum-nav.html`);
-		ForumController.feedPage = await ForumController.cachePage(`/public/pages/feed.html`, `/public/scripts/druidis-feed.js`);
-	}
-	
-	static async cachePage(htmlPath: string, script = "") {
 		const decoder = new TextDecoder("utf-8");
-		const html = decoder.decode(await Deno.readFile(`${Deno.cwd()}${htmlPath}`));
-		
-		const addScript = script ? `<script defer src="${script}"></script>` : ``;
-		
-		return `
-		${WebController.header}
-		${addScript}
-		${WebController.headerCloser}
-		${WebController.panelOpen}
-		${WebController.panelClose}
-		${html}
-		${WebController.pageClose}
-		${WebController.footer}`;
+		ForumController.forumNav = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/forum-nav.html`));
+		ForumController.feedPage = decoder.decode(await Deno.readFile(`${Deno.cwd()}/public/pages/feed.html`));
 	}
 }

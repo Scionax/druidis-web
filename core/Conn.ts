@@ -1,3 +1,4 @@
+import WebController from "../controller/WebController.ts";
 import VerboseLog from "./VerboseLog.ts";
 
 export default class Conn {
@@ -8,6 +9,7 @@ export default class Conn {
 	public url: URL;
 	
 	// URL Segments
+	public onlyInnerContent = false;			// TRUE for /page urls. Means we only want to send the inner page content.
 	public url1: string;
 	public url2: string;
 	public url3: string;
@@ -27,6 +29,13 @@ export default class Conn {
 		
 		// Prepare URL Segments
 		const seg = this.url.pathname.split("/");		// e.g. ["", "api", "post"]
+		
+		// If we're dealing with a "/page" url, we only send the page HTML, not the full set.
+		if(seg[1] === "page") {
+			this.onlyInnerContent = true;
+			seg.shift();
+		}
+		
 		this.url1 = seg.length >= 2 ? seg[1] : "";
 		this.url2 = seg.length >= 3 ? seg[2] : "";
 		this.url3 = seg.length >= 4 ? seg[3] : "";
@@ -57,14 +66,22 @@ export default class Conn {
 	
 	// return await conn.sendHTML("<div>Some Page!</div>");
 	async sendHTML( html: string ): Promise<Response> {
-		return await new Response(html, { status: 200, headers: {
+		
+		if(this.onlyInnerContent) {
+			return await new Response(html, { status: 200, headers: {
+				"Content-Type": "text/html; charset=utf-8",
+			}});
+		}
+		
+		// Return the whole page:
+		return await new Response(`${WebController.layoutOpen} ${html} ${WebController.layoutClose}`, { status: 200, headers: {
 			"Content-Type": "text/html; charset=utf-8",
 		}});
 	}
 	
 	// return await conn.send404("<div>Some Page!</div>");
-	async send404( html: string ): Promise<Response> {
-		return await new Response(html, { status: 400, headers: {
+	async send404(): Promise<Response> {
+		return await new Response(WebController.bad404, { status: 400, headers: {
 			"Content-Type": "text/html; charset=utf-8",
 		}});
 	}

@@ -263,7 +263,7 @@ document.getElementById("postSubmit").addEventListener("click", async () => {
 	config.post.forum = forumElement.value;
 	
 	submitElement.value = "Submitting...";
-	console.log(config.post);
+	
 	// Submit Content to API
 	const response = await fetch(`${config.api}/post`, {
 		method: 'POST',
