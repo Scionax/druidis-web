@@ -44,7 +44,8 @@ if(elLogin) {
 		const response = await fetch(`${config.api}/user/login`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				// 'Credentials': 'include', // Needed or Cookies will not be sent.
 				// 'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: JSON.stringify(data)
@@ -66,6 +67,7 @@ if(elLogin) {
 		// Success
 		
 		// TODO: Redirect, Process, etc.
+		// document.cookie = `login="${json}"; Max-Age=86400; HttpOnly;`;
 		
 		console.log(json);
 	});
@@ -114,7 +116,8 @@ if(elSignUp) {
 		const response = await fetch(`${config.api}/user/sign-up`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				// 'Credentials': 'include', // Needed or Cookies will not be sent.
 				// 'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: JSON.stringify(data)

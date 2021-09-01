@@ -264,7 +264,8 @@ document.getElementById("postSubmit").addEventListener("click", async () => {
 	const response = await fetch(`${config.api}/post`, {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			// 'Credentials': 'include', // Needed or Cookies will not be sent.
 			// 'Content-Type': 'application/x-www-form-urlencoded',
 		},
 		body: JSON.stringify(config.post)

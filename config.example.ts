@@ -19,7 +19,4 @@ export const config = {
         logging: true,
         verbose: true,		// Provide extra logging details.
 	},
-	cookies: {
-		password: "amFm3KdMdre_ns6teI2x4o4KjEvmsa0on",
-	},
 }

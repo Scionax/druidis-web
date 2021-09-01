@@ -8,7 +8,7 @@
 */
 
 const zqqConfig = {
-	host: "http://api.dev.druidis",
+	host: "http://localhost:8080",
 	forum: "Technology",
 	categories: ["News", "Events", "Other"],
 	defaultCategory: "Events",
@@ -167,6 +167,7 @@ function zqqParseMetaTags(metaData) {
 // 		credentials: 'omit', // include, *same-origin, omit
 // 		headers: {
 //             // "Content-Type": "plain/text",
+			// 'Credentials': 'include', // Needed or Cookies will not be sent.
 //             "Content-Type": "application/json",
 //         },
 // 		body: JSON.stringify(metaData) // body data type must match "Content-Type" header
@@ -189,6 +190,7 @@ const fetchOtherSite = async () => {
 		credentials: 'omit', // include, *same-origin, omit
 		headers: {
             "Content-Type": "plain/text",
+			// 'Credentials': 'include', // Needed or Cookies will not be sent.
             // "Content-Type": "application/json",
         },
 		// body: JSON.stringify(metaData) // body data type must match "Content-Type" header
