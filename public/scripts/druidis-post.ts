@@ -187,105 +187,110 @@ abstract class OpenGraph {
 	}
 }
 
-function resetSubmissionContent() {
-	
-	// Reset Input Fields
-	const submitElement: HTMLInputElement = document.getElementById("postSubmit") as HTMLInputElement;
-	const urlElement: HTMLInputElement = document.getElementById("postUrl") as HTMLInputElement;
-	const forumElement: HTMLInputElement = document.getElementById("postForum") as HTMLInputElement;
-	
-	urlElement.value = "";
-	forumElement.value = "";
-	submitElement.value = "Submit Post";
-	
-	Webpage.clearBlock("feed-contain");
-}
-
-// Draw Forum List
-function updateForumSelect() {
-	const sel: HTMLSelectElement = document.getElementById("postForum") as HTMLSelectElement;
-	
-	for (const [key, fData] of Object.entries(Config.schema)) {
+abstract class PostPage {
+	static clearForm() {
 		
-		// Only Find the Parent Forums
-		if(typeof fData.parent !== "undefined") { continue; }
+		// Reset Input Fields
+		const submitElement: HTMLInputElement = document.getElementById("postSubmit") as HTMLInputElement;
+		const urlElement: HTMLInputElement = document.getElementById("postUrl") as HTMLInputElement;
+		const forumElement: HTMLInputElement = document.getElementById("postForum") as HTMLInputElement;
 		
-		const option = document.createElement("option") as HTMLOptionElement;
-		option.value = key;
-		option.text = key;
-		option.setAttribute("style", "font-weight: bold; font-size: 1.2em;");
-		sel.add(option);
+		urlElement.value = "";
+		forumElement.value = "";
+		submitElement.value = "Submit Post";
 		
-		if(typeof fData.children === "undefined") { continue; }
+		Webpage.clearBlock("feed-contain");
+	}
+	
+	// Populate the Forum Selection Input
+	static populateForumSelect() {
+		const sel: HTMLSelectElement = document.getElementById("postForum") as HTMLSelectElement;
 		
-		for(let i = 0; i < fData.children.length; i++) {
+		for (const [key, fData] of Object.entries(Config.schema)) {
+			
+			// Only Find the Parent Forums
+			if(typeof fData.parent !== "undefined") { continue; }
+			
 			const option = document.createElement("option") as HTMLOptionElement;
-			option.value = fData.children[i];
-			option.text = ` - ${fData.children[i]}`;
+			option.value = key;
+			option.text = key;
+			option.setAttribute("style", "font-weight: bold; font-size: 1.2em;");
 			sel.add(option);
+			
+			if(typeof fData.children === "undefined") { continue; }
+			
+			for(let i = 0; i < fData.children.length; i++) {
+				const option = document.createElement("option") as HTMLOptionElement;
+				option.value = fData.children[i];
+				option.text = ` - ${fData.children[i]}`;
+				sel.add(option);
+			}
 		}
 	}
+	
+	static initialize() {
+		PostPage.populateForumSelect();
+		
+		const postUrl = document.getElementById("postUrl") as HTMLInputElement;
+		const postSubmit = document.getElementById("postSubmit") as HTMLInputElement;
+		
+		postUrl.addEventListener("click", () => { postUrl.value = ""; });
+		
+		postUrl.addEventListener("paste", () => {
+			
+			// We need a timeout here, since we actually want to check AFTER the paste event.
+			setTimeout(function() {
+				const urlInput = document.getElementById("postUrl") as HTMLInputElement;
+				const urlInfo = new URL(urlInput.value);
+				try {
+					if(urlInfo.pathname !== "/") {
+						OpenGraph.fetchData(urlInput.value);
+					}
+				} catch {
+					console.error("Unable to make a URL.", urlInput.value);
+				}
+			}, 10);
+		});
+		
+		postSubmit.addEventListener("click", async () => {
+			if(!API.url) { console.error("Unable to post. `API.url` is not set."); return; }
+			
+			const submitElement = postSubmit as HTMLInputElement;
+			
+			// Prevent re-submissions.
+			if(submitElement.value !== "Submit Post") { return; }
+			
+			// Make sure there is content to submit:
+			const urlElement = document.getElementById("postUrl") as HTMLInputElement;
+			const forumElement = document.getElementById("postForum") as HTMLSelectElement;
+			
+			if(!urlElement.value) { alert("Must provide a URL."); return; }
+			if(!forumElement.value) { alert("Must select a forum to post to."); return; }
+			
+			// Make sure the post content is loaded:
+			if(!OpenGraph.postData) { alert("Submission must contain a valid post."); return; }
+			if(!OpenGraph.postData.title) { alert("Requires a title."); return; }
+			if(!OpenGraph.postData.origImg) { alert("Requires a valid image."); return; }
+			if(!OpenGraph.postData.w || !OpenGraph.postData.h) { alert("Error: The system failed to identify image width and height."); return; }
+			
+			// Make sure the forum is valid.
+			if(!Config.schema || !Config.schema[forumElement.value]) { alert("Error: The forum selected is considered invalid."); return; }
+			
+			// Assign the forum to our post content:
+			OpenGraph.postData.forum = forumElement.value;
+			
+			submitElement.value = "Submitting...";
+			
+			// Submit Content to API
+			const json = await API.callAPI("/post", OpenGraph.postData as unknown as Record<string, unknown>);
+			
+			Alerts.error(!json, "Error: Post submission response was empty or invalid.", true);
+			if(Alerts.hasAlerts()) { Alerts.displayAlerts(); return; }
+			
+			// Clear All Submission Contenet
+			PostPage.clearForm();
+			
+			console.log(json);
+		});
+	}
 }
-
-updateForumSelect();
-
-document.getElementById("postUrl").addEventListener("click", () => {
-	document.getElementById("postUrl").value = "";
-});
-
-document.getElementById("postUrl").addEventListener("paste", () => {
-	
-	// We need a timeout here, since we actually want to check AFTER the paste event.
-	setTimeout(function() {
-		const urlInput = document.getElementById("postUrl") as HTMLInputElement;
-		const urlInfo = new URL(urlInput.value);
-		try {
-			if(urlInfo.pathname !== "/") {
-				OpenGraph.fetchData(urlInput.value);
-			}
-		} catch {
-			console.error("Unable to make a URL.", urlInput.value);
-		}
-	}, 10);
-});
-
-document.getElementById("postSubmit").addEventListener("click", async () => {
-	if(!API.url) { console.error("Unable to post. `API.url` is not set."); return; }
-	
-	const submitElement = document.getElementById("postSubmit") as HTMLInputElement;
-	
-	// Prevent re-submissions.
-	if(submitElement.value !== "Submit Post") { return; }
-	
-	// Make sure there is content to submit:
-	const urlElement = document.getElementById("postUrl") as HTMLInputElement;
-	const forumElement = document.getElementById("postForum") as HTMLSelectElement;
-	
-	if(!urlElement.value) { alert("Must provide a URL."); return; }
-	if(!forumElement.value) { alert("Must select a forum to post to."); return; }
-	
-	// Make sure the post content is loaded:
-	if(!OpenGraph.postData) { alert("Submission must contain a valid post."); return; }
-	if(!OpenGraph.postData.title) { alert("Requires a title."); return; }
-	if(!OpenGraph.postData.origImg) { alert("Requires a valid image."); return; }
-	if(!OpenGraph.postData.w || !OpenGraph.postData.h) { alert("Error: The system failed to identify image width and height."); return; }
-	
-	// Make sure the forum is valid.
-	if(!Config.schema || !Config.schema[forumElement.value]) { alert("Error: The forum selected is considered invalid."); return; }
-	
-	// Assign the forum to our post content:
-	OpenGraph.postData.forum = forumElement.value;
-	
-	submitElement.value = "Submitting...";
-	
-	// Submit Content to API
-	const json = await API.callPostAPI("/post", OpenGraph.postData);
-	
-	Alerts.error(!json, "Error: Post submission response was empty or invalid.", true);
-	if(Alerts.hasAlerts()) { Alerts.displayAlerts(); return; }
-	
-	// Clear All Submission Contenet
-	resetSubmissionContent();
-	
-	console.log(json);
-});

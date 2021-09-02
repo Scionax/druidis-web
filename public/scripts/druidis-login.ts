@@ -22,7 +22,7 @@ if(elLogin) {
 		elLogin.value = "Logging In...";
 		
 		// Call the API
-		const json = await API.callPostAPI("/user/login", data);
+		const json = await API.callAPI("/user/login", data);
 		
 		Alerts.error(!json, "Error: Server response was invalid. May need to contact the webmaster.", true);
 		if(Alerts.hasAlerts()) { Alerts.displayAlerts(); return; }
@@ -67,7 +67,7 @@ if(elSignUp) {
 		elSignUp.value = "Submitting...";
 		
 		// Submit Content to API
-		const json = await API.callPostAPI("/user/sign-up", data);
+		const json = await API.callAPI("/user/sign-up", data);
 		
 		Alerts.error(!json, "Error: Server response was invalid. May need to contact the webmaster.", true);
 		if(Alerts.hasAlerts()) { Alerts.displayAlerts(); return; }

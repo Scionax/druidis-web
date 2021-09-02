@@ -37,10 +37,14 @@ class API {
 		else { API.url = `https://druidis.org/api`; }
 	}
 	
-	static async callPostAPI(path: string, data: Record<string, unknown>) {
-		
-		// Submit Content to API
-		const response = await fetch(`${API.url}${path}`, {
+	static async callAPI(path: string, data: Record<string, unknown> | null = null) {
+		const response: Response = data === null ? await API.callGetAPI(path) : await API.callPostAPI(path, data);
+		const responseData = await response.json();
+		return responseData.d;
+	}
+	
+	private static async callPostAPI(path: string, data: Record<string, unknown>): Promise<Response> {
+		return await fetch(`${API.url}${path}`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -49,10 +53,16 @@ class API {
 			},
 			body: JSON.stringify(data)
 		});
-		
-		// Retrieve Response
-		const responseData = await response.json();
-		return responseData.d;
+	}
+	
+	private static async callGetAPI(path: string): Promise<Response> {
+		return await fetch(`${API.url}${path}`, {
+			headers: {
+				'Content-Type': 'application/json',
+				'Credentials': 'include', // Needed or Cookies will not be sent.
+				// 'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		});
 	}
 }
 
@@ -139,10 +149,23 @@ class Webpage {
 			}
 		}
 	}
+	
+	static initialize() {
+		
+		Alerts.purgeAlerts();
+		
+		// Main Menu Clickable
+		const menuClick = document.getElementById("menuClick") as HTMLElement;
+		menuClick.addEventListener("click", function() {
+			var menu = document.getElementById("menuMain") as HTMLElement;
+			if(menu) { menu.style.display = menu.style.display === "flex" ? "none" : "flex"; }
+		});
+	}
 }
 
 Config.initialize();
 API.initialize();
+Webpage.initialize();
 
 interface AmpTagName extends HTMLElementTagNameMap {
     "amp-img": HTMLElement;
@@ -293,18 +316,3 @@ function buildPost(post: PostData) {
 	
 	return feedContainer;
 }
-
-function displayFeedPost(post: PostData) {
-	
-	const feedElement = buildPost(post);
-	
-	// Attach Created Elements to Feed Section
-	const feedSection = document.getElementById("main-section");
-	if(feedSection !== null) { feedSection.appendChild(feedElement); }
-}
-
-// Main Menu Clickable
-document.getElementById("menuClick").addEventListener("click", function() {
-	var menu = document.getElementById("menuMain");
-	menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-});
