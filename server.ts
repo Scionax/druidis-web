@@ -3,7 +3,6 @@
 // deno run --allow-net --allow-write --allow-read server.ts --config tsconfig.json
 // deno run --allow-net --allow-write --allow-read server.ts -port 8000 -specialOpts needToSetup
 // deno test
-// deno bundle public/scripts/druidis.ts test.js --config tsconfig.json
 
 import { config } from "./config.ts";
 import Conn from "./core/Conn.ts";
@@ -35,6 +34,7 @@ const RouteMap: { [name: string]: WebController } = {
 	"post": new PostController(),
 	"about": new AboutController(),
 	"user": new UserController(),
+	// "page": {{ See 'Conn' class for details. Loads only the inner page content. }}
 };
 
 // Server Routing
