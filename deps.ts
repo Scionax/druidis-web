@@ -1,5 +1,4 @@
 export { assert, assertEquals } from "https://deno.land/std@0.103.0/testing/asserts.ts";
-export { getCookies, setCookie, deleteCookie } from "https://deno.land/std@0.104.0/http/cookie.ts";
 
 // File Systems
 export { Buffer } from "https://deno.land/std@0.101.0/io/buffer.ts";

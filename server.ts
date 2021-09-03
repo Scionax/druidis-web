@@ -3,6 +3,7 @@
 // deno run --allow-net --allow-write --allow-read server.ts --config tsconfig.json
 // deno run --allow-net --allow-write --allow-read server.ts -port 8000 -specialOpts needToSetup
 // deno test
+// deno bundle public/scripts/druidis.ts test.js --config tsconfig.json
 
 import { config } from "./config.ts";
 import Conn from "./core/Conn.ts";
@@ -12,6 +13,7 @@ import ForumController from "./controller/ForumController.ts";
 import PostController from "./controller/PostController.ts";
 import AboutController from "./controller/AboutController.ts";
 import UserController from "./controller/UserController.ts";
+import ScriptWatcher from "./core/ScriptWatcher.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -63,6 +65,9 @@ async function handle(conn: Deno.Conn) {
 		}
 	}
 }
+
+// Run Script File Watcher (local / dev only)
+if(config.local) { ScriptWatcher.initialize(); }
 
 // Run Server
 const serv = config.local ? config.serverLocal : config.server;
