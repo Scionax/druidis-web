@@ -19,7 +19,6 @@ export default class Conn {
 	public errorReason = "";
 	
 	// User Data
-	public userObj = {};
 	public id = 0;			// The user's [expected] ID (NOTE: This is not a verified ID, only what the cookie indicates).
 	
 	constructor(requestEvent: Deno.RequestEvent) {
@@ -88,7 +87,7 @@ export default class Conn {
 	
 	// return await conn.sendJson("Path successful!");
 	async sendJson( jsonObj: unknown ): Promise<Response> {
-		return await new Response(JSON.stringify({ u: this.userObj, d: jsonObj }), { status: 200, headers: {
+		return await new Response(JSON.stringify(jsonObj), { status: 200, headers: {
 			"Content-Type": "application/json; charset=utf-8",
 		}});
 	}
