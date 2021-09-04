@@ -27,14 +27,14 @@ export default abstract class ScriptWatcher {
 			
 			if(fileChanged && fileChanged.indexOf(".ts") > -1 && !(fileChanged.indexOf("_build") > -1)) {
 				console.log(`Script file modified: ${fileChanged}`);
-				ScriptWatcher.runUpdateTime = Date.now() + 1000;
+				ScriptWatcher.runUpdateTime = Date.now() + 350;
 			}
 		}
 	}
 	
 	// Watches to see if files need to be updated and bundled. If so, passes the instruction to runScriptBuilder().
 	static watchFileQueue() {
-		setTimeout(ScriptWatcher.watchFileQueue, 2000);
+		setTimeout(ScriptWatcher.watchFileQueue, 500);
 		
 		// If we've passed the update time check, it means there are files waiting to be updated.
 		if(ScriptWatcher.runUpdateTime !== 0 && ScriptWatcher.runUpdateTime < Date.now()) {
@@ -51,7 +51,7 @@ export default abstract class ScriptWatcher {
 		const scriptDir = "../../scripts";
 		const buildFile = `${scriptDir}/_build.ts`;
 		const thisProjectFile = `./public/druidis.js`;
-		const scriptProjectFile = `${scriptDir}/druidis.js`;
+		const scriptProjectFile = `${scriptDir}/_build.js`;
 		
 		// Get a list of the scripts. Ignore any preceded with "_" or with .js
 		// const fileNames: string[] = [];
