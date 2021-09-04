@@ -22,8 +22,15 @@ body {
 	font-family: "Segoe UI Historic", "Segoe UI", "Roboto", "Helvetica", "Arial";
 }
 
-a { text-decoration: none; color:rgb(25, 25, 25); }
+/* Links */
+a { text-decoration: none; color:rgb(10, 10, 25); }
 a.highlight { text-decoration: underline dotted; color:rgb(25, 25, 25); }
+
+.active { background-color: var(--hoverGreenLight); }
+
+.linkList { display:flex; flex-wrap: wrap; gap: 10px; width: 100%; } /* padding: 5px 30px 10px 48px;  */ /* align-items: flex-end; margin-left:15px; margin-bottom:16px;  */
+.link { border: solid 1px var(--hoverGreenDark); border-radius: 6px; padding:12px; }
+.link:hover { background-color:var(--hoverGreenLight); transition: all 0.1s ease-in-out; }
 
 /* Images */
 amp-img { border: none; }
@@ -90,34 +97,8 @@ header {
 .alert-success { background-color: rgb(210, 240, 220); color: rgb(20, 85, 35); border-color: rgb(195, 230, 200); }
 .alert-fail { background-color: rgb(245, 200, 200); color: rgb(115, 30, 35); border-color: rgb(230, 185, 185); }
 
-/* ----- Main Menu ----- */
-#menuMain {
-	display: none;
-	flex-flow: column nowrap;
-	align-items: center;
-	justify-content:space-evenly;
-	
-	position: fixed;
-	height: calc(100% - 48px); width: 100%;
-	left: 0; top: 48px;
-	
-	background-color: white;
-	z-index:100;
-	padding:3px 0 0 0;
-}
-
-#menuMain > a {
-	background-color: #bcdafe;
-	flex: 1 1;
-	width: 98%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 10px;
-	margin-bottom:3px;
-}
-
 /* ----- Columns ----- */
+#main-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width: calc(462px + 400px + 30px); }
 .layoutMain { flex: 1 1 892px; padding-top: 54px; margin-left: var(--mainPanelPos); }
 
 .Sides { position: fixed; width: var(--leftWidth); left: var(--leftPanelPos); top: 48px; min-height: 100vh; z-index: 8; }
@@ -133,7 +114,7 @@ header {
 .LBox { flex: 0 0; padding:12px; margin: 8px; border-radius: 10px; background-color:var(--hoverGreenLight); }
 
 /* ----- Tray ----- */
-.tray { display: flex; height:52px; }
+.tray { display: flex; }
 .tray-icon { width: 48px;  }
 .tray-mid { flex: 1; }
 .tray-menu { width:48px; height:48px; }
@@ -141,10 +122,10 @@ header {
 .tray-menu-inner:hover { background-color: var(--colorBrown1); }
 
 /* ----- Feed Classes ----- */
-#main-section { display:flex; flex-direction: column; flex: 1; align-items: center; overflow-y: hidden; max-width: calc(462px + 400px + 30px); }
-.feed-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px var(--colorBrown1); }
-.feed-contain:first-child { border-top: none; }
-.feed-wrap { display: flex; flex-direction: column; flex: 1 1 462px; max-width:462px; }
+.main-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px var(--colorBrown1); }
+.main-contain:first-child { border-top: none; }
+.full-wrap { margin-right: 30px; margin-bottom: 6px; }
+.half-wrap { display: flex; flex-direction: column; flex: 1 1 462px; max-width:462px; } /* Wraps One Column */
 .feed-hov { padding-bottom: 16px; }
 .feed-hov:hover { background-color:var(--hoverGray); transition: all 0.1s ease-in-out; }
 .feed-image { max-width: 462px; padding: 0px; margin: 0px; }
@@ -152,13 +133,12 @@ header {
 .feed-image-inner > amp-img { border-radius:10px; }
 
 .extra-wrap { display:flex; flex-direction: column; flex: 1 1 400px; padding-top:52px; }
-.extra-wrap > .feed-hov { padding:0 15px 0 15px; }
+.extra-wrap > .feed-hov { padding:0 25px 0 15px; }
 .extra-body { flex: 0 1; width:100%; }
 .extra-foot { flex: 2 0; display:flex; }
 /* .extra-foot > p { margin-left:15px; display:flex; align-items: flex-end; } */
-.breadcrumbs { margin-left:15px; display:flex; align-items: flex-end; flex-direction: row; gap: 10px; margin-bottom:16px; }
-.crumb { padding:12px; border: solid 1px var(--hoverGreenDark); border-radius: 6px; }
-.crumb:hover { background-color:var(--hoverGreenLight); transition: all 0.1s ease-in-out; }
+
+.full { margin-left: 48px; }
 
 /* ----- Media Handling ----- */
 @media screen and (min-width: 900px) and (max-width: 1220px) {
@@ -186,7 +166,7 @@ header {
 }
 
 @media screen and (max-width: 500px) {
-	.feed-contain { flex-wrap: wrap; }
+	.main-contain { flex-wrap: wrap; }
 	.extra-wrap { padding-top: 0px; }
 	.extra-wrap > .feed-hov { padding:0 30px 0 30px; }
 	.extra-wrap > p { display: none; }
@@ -197,6 +177,11 @@ header {
 
 /* ----- Text Classes ----- */
 h1 { margin: 1rem; }
-h2, .h2 { font-family: var(--boldFont); font-size:19px; margin: 2px 0px 2px 0px; }
-h3, .h3 { font-family: var(--boldFont); font-size:15px; font-weight: 600; margin-top:8px; }
-.note { font-size: 13px; font-weight: 400; color: rgb(100, 100, 100); }
+h2, .h2 { font-family: var(--boldFont); font-size:22px; margin: 8px 0px 2px 0px; }
+h3, .h3 { font-family: var(--boldFont); font-size:16px; font-weight: 600; margin-top:8px; }
+.note1 { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); }
+.note2 { font-size: 13px; font-weight: 400; color: rgb(100, 100, 100); }
+
+.text { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); }
+.text a { text-decoration: underline dotted; }
+.text p { padding-bottom: 0 0 4px 0; }
