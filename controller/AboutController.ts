@@ -19,7 +19,7 @@ export default class AboutController extends WebController {
 		.tray { display: flex; min-height:52px; padding-right: 30px; }
 		.icon { width: 48px;  }
 		.linkList { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
-		.active { background-color: var(--hoverGreenLight); }
+		.active { background-color: var(--greenLight); }
 		
 		.h3 { font-size: 22px; } // change to h2
 		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); } // to note1

@@ -1,7 +1,7 @@
 #!/usr/bin/env deno
 
-// deno run --allow-net --allow-write --allow-read server.ts --config tsconfig.json
-// deno run --allow-net --allow-write --allow-read server.ts -port 8000 -specialOpts needToSetup
+// deno run --allow-net --allow-write --allow-read --unstable server.ts --config tsconfig.json
+// deno run --allow-net --allow-write --allow-read --unstable server.ts -port 8000 -specialOpts needToSetup
 // deno test
 
 import { config } from "./config.ts";

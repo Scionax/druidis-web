@@ -1,13 +1,68 @@
+<style>
+	#dropArea {
+		border: 2px dashed #ccc;
+		border-radius: 20px;
+		width: 100%;
+		font-family: sans-serif;
+		margin: 10px auto;
+		padding: 20px;
+	}
+	#dropArea.highlight { border-color: purple; }
+	p { margin-top: 0; }
+	#gallery img { max-width: 100%; max-height: 350px; margin-bottom: 10px; margin-right: 10px; vertical-align: middle; }
+	.dropButton {
+		display: inline-block;
+		padding: 10px;
+		background: #ccc;
+		cursor: pointer;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+	}
+	.dropButton:hover { background: #ddd; }
+	#fileElem { display: none; }
+</style>
 
-<div class="inputWrap">
-	<label for="input" class="inputLabel">Website URL</label>
-	<input type="text" id="postUrl" class="inputText" placeholder="e.g. http://example.com" />
-</div>
-<div class="inputWrap">
-	<select id="postForum" class="inputText">
-		<option value="">-- Select a Forum --</option>
-	</select>
-</div>
-<div class="inputWrap">
-	<input type="submit" id="postSubmit" class="submitButton" value="Submit Post" />
+<div style="margin-left:4px;margin-right:10px;">
+	<div class="tabs">
+		<input type="radio" name="tabs" id="tabone" checked="checked">
+		<label for="tabone">External Link</label>
+		<div class="tab">
+			<p>Copy the desired webpage URL into the form below to auto-generate content.</p>
+			<div class="inputWrap">
+				<label for="input" class="inputLabel">Website URL</label>
+				<input type="text" id="postUrl" class="inputText" placeholder="e.g. http://example.com" />
+			</div>
+			<div class="inputWrap">
+				<select id="postForum" class="inputText">
+					<option value="">-- Select a Forum --</option>
+				</select>
+			</div>
+			<div class="inputWrap">
+				<input type="submit" id="postSubmit" class="submitButton" value="Submit Post" />
+			</div>
+		</div>
+		
+		<input type="radio" name="tabs" id="tabtwo">
+		<label for="tabtwo">Custom Post</label>
+		<div class="tab">
+			<form class="postForm" action="#">
+				<div id="dropArea">
+					<div id="gallery"></div>
+					<input type="file" id="fileElem" multiple accept="image/*" onchange="PostPage.handleFiles(this.files)">
+					<label class="dropButton" for="fileElem">Click or Drag &amp; Drop to Select an Image</label>
+				</div>
+				<div class="inputWrap">
+					<label for="input" class="inputLabel">Title</label>
+					<input type="text" id="title" class="inputText" maxLength="120" />
+				</div>
+				<div class="inputWrap">
+					<label for="input" class="inputLabel">Brief Summary or Comment</label>
+					<textarea id="content" class="inputText" maxlength="250" style="height: 80px; min-height: 80px; resize: vertical"></textarea>
+				</div>
+				<div class="inputWrap">
+					<input type="submit" id="intSubmit" class="submitButton" value="Submit Post" />
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
