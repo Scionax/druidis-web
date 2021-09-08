@@ -19,9 +19,10 @@
 		border: 1px solid #ccc;
 	}
 	.dropButton:hover { background: #ddd; }
-	#fileElem { display: none; }
+	#intImage { display: none; }
 </style>
 
+<div id="alertBox"></div>
 <div style="margin-left:4px;margin-right:10px;">
 	<div class="tabs">
 		<input type="radio" name="tabs" id="tabone" checked="checked">
@@ -30,34 +31,39 @@
 			<p>Copy the desired webpage URL into the form below to auto-generate content.</p>
 			<div class="inputWrap">
 				<label for="input" class="inputLabel">Website URL</label>
-				<input type="text" id="postUrl" class="inputText" placeholder="e.g. http://example.com" />
+				<input type="text" id="extUrl" class="inputText" placeholder="e.g. http://example.com" />
 			</div>
 			<div class="inputWrap">
-				<select id="postForum" class="inputText">
+				<select id="extForum" class="inputText">
 					<option value="">-- Select a Forum --</option>
 				</select>
 			</div>
 			<div class="inputWrap">
-				<input type="submit" id="postSubmit" class="submitButton" value="Submit Post" />
+				<input type="submit" id="extSubmit" class="submitButton" value="Submit Post" />
 			</div>
 		</div>
 		
 		<input type="radio" name="tabs" id="tabtwo">
 		<label for="tabtwo">Custom Post</label>
 		<div class="tab">
-			<form class="postForm" action="#">
+			<form class="intForm" action="#">
 				<div id="dropArea">
 					<div id="gallery"></div>
-					<input type="file" id="fileElem" multiple accept="image/*" onchange="PostPage.handleFiles(this.files)">
-					<label class="dropButton" for="fileElem">Click or Drag &amp; Drop to Select an Image</label>
+					<input type="file" id="intImage" multiple accept="image/*" onchange="PostPage.handleFiles(this.files)">
+					<label class="dropButton" for="intImage">Click or Drag &amp; Drop to Select an Image</label>
 				</div>
 				<div class="inputWrap">
 					<label for="input" class="inputLabel">Title</label>
-					<input type="text" id="title" class="inputText" maxLength="120" />
+					<input type="text" id="intTitle" class="inputText" maxLength="120" />
 				</div>
 				<div class="inputWrap">
-					<label for="input" class="inputLabel">Brief Summary or Comment</label>
-					<textarea id="content" class="inputText" maxlength="250" style="height: 80px; min-height: 80px; resize: vertical"></textarea>
+					<label for="input" class="inputLabel">Brief Summary or Comment (Optional)</label>
+					<textarea id="intContent" class="inputText" maxlength="250" style="height: 80px; min-height: 80px; resize: vertical"></textarea>
+				</div>
+				<div class="inputWrap">
+					<select id="intForum" class="inputText">
+						<option value="">-- Select a Forum --</option>
+					</select>
 				</div>
 				<div class="inputWrap">
 					<input type="submit" id="intSubmit" class="submitButton" value="Submit Post" />
