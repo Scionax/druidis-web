@@ -15,8 +15,4 @@ export const config = {
 	},
 	local: false,
 	prod: true,
-	debug: {
-        logging: true,
-        verbose: true,		// Provide extra logging details.
-	},
 }

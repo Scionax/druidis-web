@@ -3,3 +3,4 @@ data/
 docs/
 tsconfig.json
 config.ts
+log.txt

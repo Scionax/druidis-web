@@ -1,5 +1,6 @@
 import { config } from "../config.ts";
 import { minify } from "https://deno.land/x/minifier@v1.1.1/mod.ts";
+import { log } from "../deps.ts";
 
 export default abstract class ScriptWatcher {
     
@@ -8,7 +9,7 @@ export default abstract class ScriptWatcher {
 	// Run Script File Watcher (local / dev only)
 	static initialize() {
 		if(!config.local) { return; }
-		console.log("Loading File Watcher for Scripts (Local Only)");
+		log.info("Loading File Watcher for Scripts (Local Only)");
 		ScriptWatcher.watchForScriptUpdates();
 		ScriptWatcher.watchFileQueue();
 	}
@@ -26,7 +27,7 @@ export default abstract class ScriptWatcher {
 			const fileChanged = event.paths[0];
 			
 			if(fileChanged && fileChanged.indexOf(".ts") > -1 && !(fileChanged.indexOf("_build") > -1)) {
-				console.log(`Script file modified: ${fileChanged}`);
+				log.debug(`Script file modified: ${fileChanged}`);
 				ScriptWatcher.runUpdateTime = Date.now() + 350;
 			}
 		}
@@ -44,7 +45,7 @@ export default abstract class ScriptWatcher {
 	
 	// Run the custom Script Builder
 	static async runScriptBuilder() {
-		console.log("Updating and Bundling Script Files...");
+		log.debug("Updating and Bundling Script Files...");
 		ScriptWatcher.runUpdateTime = 0;
 		
 		// Prepare Important Directories & Files
@@ -83,7 +84,7 @@ export default abstract class ScriptWatcher {
 		await Deno.writeTextFile(thisProjectFile, bundledJs);
 		await Deno.writeTextFile(scriptProjectFile, bundledJs);
 		
-		console.log(`Updated druidis.js script.`);
+		log.debug(`Updated druidis.js script.`);
 	}
 }
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env deno
 
+// deno run --allow-net --allow-write --allow-read --unstable server.ts
 // deno run --allow-net --allow-write --allow-read --unstable server.ts --config tsconfig.json
 // deno run --allow-net --allow-write --allow-read --unstable server.ts -port 8000 -specialOpts needToSetup
 // deno test
@@ -13,6 +14,7 @@ import PostController from "./controller/PostController.ts";
 import AboutController from "./controller/AboutController.ts";
 import UserController from "./controller/UserController.ts";
 import ScriptWatcher from "./core/ScriptWatcher.ts";
+import { log } from "./deps.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -66,12 +68,32 @@ async function handle(conn: Deno.Conn) {
 	}
 }
 
+// Logging Handler - Saves "warnings" or higher in log.txt
+//		log.debug("Standard debug message. Won't get logged in a file.");
+//		log.info("Standard info message. Won't get logged in a file.");
+//		log.warning(true);
+//		log.error({ foo: "bar", fizz: "bazz" });
+//		log.critical("500 Internal Server Error");
+await log.setup({
+	handlers: {
+		console: new log.handlers.ConsoleHandler("DEBUG"),
+		file: new log.handlers.FileHandler("WARNING", {
+			filename: "./log.txt",
+			formatter: "{levelName} {msg}",
+		}),
+	},
+	
+	loggers: {
+		default: { level: "DEBUG", handlers: ["console", "file"] },
+	},
+});
+
 // Run Script File Watcher (local / dev only)
 if(config.local) { ScriptWatcher.initialize(); }
 
 // Run Server
 const serv = config.local ? config.serverLocal : config.server;
-console.log("Launching Server on Port " + serv.port + ".")
+log.info("Launching Server on Port " + serv.port + ".")
 
 if(serv.certFile && serv.keyFile) {
 	const server = Deno.listenTls({

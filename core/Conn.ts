@@ -1,5 +1,5 @@
 import WebController from "../controller/WebController.ts";
-import VerboseLog from "./VerboseLog.ts";
+import { log } from "../deps.ts";
 
 export default class Conn {
 	
@@ -94,7 +94,7 @@ export default class Conn {
 	
 	// return await conn.sendBadRequest("So that error just happened.");
 	async sendFail( reason = "Bad Request", status = 400 ): Promise<Response> {
-		VerboseLog.verbose( "WebRouter.sendBadRequest() Error: " + reason );
+		log.debug(`WebRouter.sendBadRequest() Error: ${reason}`);
 		return await new Response(null, {
 			status: status,
 			statusText: reason,
