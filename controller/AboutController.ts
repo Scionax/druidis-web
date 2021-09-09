@@ -13,29 +13,6 @@ export default class AboutController extends WebController {
 	static siteNavPage = "";
 	static partnerPage = "";
 	
-	/*
-		.main-contain { display:flex; flex-direction: row; flex-wrap: nowrap; flex: 1; width:100%; border-top: solid 1px #d8c3aa; }
-		.main-wrap { display: flex; flex-direction: column; flex: 1 1; padding-bottom:10px; }
-		.tray { display: flex; min-height:52px; padding-right: 30px; }
-		.icon { width: 48px;  }
-		.linkList { display:flex; width: 100%; padding: 5px 30px 10px 48px; flex-wrap: wrap; gap: 10px; }
-		.active { background-color: var(--greenLight); }
-		
-		.h3 { font-size: 22px; } // change to h2
-		.short { font-size: 16px; font-weight: 400; color: rgb(100, 100, 100); } // to note1
-		.faq-ask { flex: 1; } // to tray-mid
-		
-		.full { font-size: 18px; font-weight: 400; color: rgb(50, 50, 50); }		// conver to 'full text'
-		.full a { text-decoration: underline dotted; }
-		.full p { padding-bottom: 0 0 4px 0; }
-	*/
-	
-	// Cached CSS
-	static css = `
-	<style>
-	</style>
-	`;
-	
 	async runHandler(conn: Conn): Promise<Response> {
 		
 		if(!conn.url2) { return await conn.sendHTML(AboutController.aboutPage); }
@@ -90,7 +67,6 @@ export default class AboutController extends WebController {
 		}
 		
 		return `
-		${AboutController.css}
 		${links}
 		${html}`;
 	}

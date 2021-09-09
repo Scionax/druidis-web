@@ -3,7 +3,7 @@
 // deno run --allow-net --allow-write --allow-read --unstable server.ts
 // deno run --allow-net --allow-write --allow-read --unstable server.ts --config tsconfig.json
 // deno run --allow-net --allow-write --allow-read --unstable server.ts -port 8000 -specialOpts needToSetup
-// deno test
+// deno test --allow-net --allow-write --allow-read --unstable
 
 import { config } from "./config.ts";
 import Conn from "./core/Conn.ts";
@@ -15,11 +15,16 @@ import AboutController from "./controller/AboutController.ts";
 import UserController from "./controller/UserController.ts";
 import ScriptWatcher from "./core/ScriptWatcher.ts";
 import { log } from "./deps.ts";
+import AdminController from "./controller/AdminController.ts";
+import ServerMechanics from "./core/ServerMechanics.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
 // 	const arg = Deno.args[i];
 // }
+
+// Prepare Server
+await ServerMechanics.setupLogger(); // Logging Handler (saves to log.txt)
 
 // Initializations
 await WebController.initialize();
@@ -27,14 +32,16 @@ await FeedController.initialize();
 await ForumController.initialize();
 await PostController.initialize();
 await AboutController.initialize();
+await AdminController.initialize();
 await UserController.initialize();
 
 // Custom Routing Map
 const RouteMap: { [name: string]: WebController } = {
+	"about": new AboutController(),
+	"admin": new AdminController(),
 	"feed": new FeedController(),
 	"forum": new ForumController(),
 	"post": new PostController(),
-	"about": new AboutController(),
 	"user": new UserController(),
 	// "page": {{ See 'Conn' class for details. Loads only the inner page content. }}
 };
@@ -67,26 +74,6 @@ async function handle(conn: Deno.Conn) {
 		}
 	}
 }
-
-// Logging Handler - Saves "warnings" or higher in log.txt
-//		log.debug("Standard debug message. Won't get logged in a file.");
-//		log.info("Standard info message. Won't get logged in a file.");
-//		log.warning(true);
-//		log.error({ foo: "bar", fizz: "bazz" });
-//		log.critical("500 Internal Server Error");
-await log.setup({
-	handlers: {
-		console: new log.handlers.ConsoleHandler("DEBUG"),
-		file: new log.handlers.FileHandler("WARNING", {
-			filename: "./log.txt",
-			formatter: "{levelName} {msg}",
-		}),
-	},
-	
-	loggers: {
-		default: { level: "DEBUG", handlers: ["console", "file"] },
-	},
-});
 
 // Run Script File Watcher (local / dev only)
 if(config.local) { ScriptWatcher.initialize(); }
