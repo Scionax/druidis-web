@@ -1,6 +1,13 @@
 import { config } from "../config.ts";
 import { minify } from "https://deno.land/x/minifier@v1.1.1/mod.ts";
 import { log } from "../deps.ts";
+import Data from "./Data.ts";
+
+// const scriptBuilder = {
+// 	druidis: {
+// 		files: [
+// 	}
+// };
 
 export default abstract class ScriptWatcher {
     
@@ -58,23 +65,31 @@ export default abstract class ScriptWatcher {
 		// const fileNames: string[] = [];
 		let typescriptContent = "";
 		
-		for await(const dirEntry of Deno.readDir(scriptDir)) {
+		
+		for await(const dirEntry of await Data.getFilesRecursive(scriptDir)) {
 			
 			// Get all .ts files. Ignore any files that are preceded with "_" or with .js
-			if(dirEntry.isFile && dirEntry.name.indexOf(".ts") > -1 && dirEntry.name.indexOf("_") !== 0) {
-				// fileNames.push(dirEntry.name);
-				const fileContents = await Deno.readTextFile(`${scriptDir}/${dirEntry.name}`);
+			if(dirEntry.indexOf(".ts") > -1 && dirEntry.indexOf("/_") !== 0 && dirEntry.indexOf("/tests") == -1) {
+				let fileContents = await Deno.readTextFile(`${scriptDir}${dirEntry}`);
+				console.log(dirEntry);
 				
 				typescriptContent += `
-				${fileContents}`;
+				${fileContents.replaceAll(/^import.*/gm, "")}`;
 			}
 		}
 		
+		// Remove disallowed content:
+		typescriptContent = typescriptContent.replaceAll(/^import.*/gm, "");				// Remove all import lines
+		typescriptContent = typescriptContent.replaceAll("export default", "");				// Remove 'export default' values
+		typescriptContent = typescriptContent.replaceAll("export function", "function");	// Remove 'export function' values
+		
+		// console.log(typescriptContent);
 		// Combine the Scripts into a single file named "_build.ts"
 		await Deno.writeTextFile(buildFile, typescriptContent);
 		
 		// Run the Deno Bundler on the script.
 		const { files } = await Deno.emit(buildFile, { bundle: "module", compilerOptions: { allowUnreachableCode: true }  });
+		console.log(files);
 		let bundledJs = files["deno:///bundle.js"];
 		
 		// Minifiy the JS Code

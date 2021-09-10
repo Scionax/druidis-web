@@ -36,11 +36,14 @@ export default class AdminController extends WebController {
 	}
 	
 	static async sendAdminPage(conn: Conn) {
+		
+		// TODO: Fetch API to confirm that you have admin permissions.
+		
 		return await conn.sendHTML(`
-		${AdminController.links}
-		${AdminController.header}
-		The main admin page, horray!
-		${AdminController.footer}
+			${AdminController.links}
+			${AdminController.header}
+			The main admin page, horray!
+			${AdminController.footer}
 		`);
 	}
 }
