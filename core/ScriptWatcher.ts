@@ -59,20 +59,17 @@ export default abstract class ScriptWatcher {
 		const scriptDir = "../../scripts";
 		const buildFile = `../../build/druidis.ts`;
 		const saveTo = `./public/druidis.js`;
-		
-		// Get a list of the scripts. Ignore any preceded with "_" or with .js
 		let tsContent = "";
 		
-		for await(const dirEntry of await Data.getFilesRecursive(scriptDir)) {
-			
-			// Get all .ts files. Ignore any files with "/tests", "/controllers", or preceded with "_"
-			if(dirEntry.indexOf(".ts") > -1 && dirEntry.indexOf("/_") !== 0) {
-				const fileContents = await Deno.readTextFile(`${scriptDir}${dirEntry}`);
-				
-				tsContent += `
-				${fileContents}`;
-			}
+		// Retrieve all scripts in the /classes directory:
+		for await(const dirEntry of await Data.getFilesRecursive(`${scriptDir}/classes`)) {
+			if(dirEntry.indexOf(".ts") === -1) { continue; } // Only retrieve .ts files.
+			console.log(dirEntry);
+			tsContent += await Deno.readTextFile(`${scriptDir}/classes${dirEntry}`);
 		}
+		
+		// Append the 'druidis.ts' script
+		tsContent += await Deno.readTextFile(`${scriptDir}/druidis.ts`);
 		
 		tsContent = ScriptWatcher.removeBreakingTSTags(tsContent);
 		
@@ -103,7 +100,7 @@ export default abstract class ScriptWatcher {
 		// Get a list of the scripts. Ignore any preceded with "_" or with .js
 		for await(const dirEntry of await Data.getFilesRecursive(scriptDir)) {
 			
-			// Only retrieve .ts files within the /controllers directory:
+			// Only retrieve .ts files:
 			if(dirEntry.indexOf(".ts") === -1) { return; }
 			
 			const controller = dirEntry.replace("/", "").replace(".ts", "");
@@ -135,6 +132,4 @@ export default abstract class ScriptWatcher {
 		tsContent = tsContent.replaceAll("export function", "function");	// Remove 'export function' values
 		return tsContent;
 	}
-	
 }
-

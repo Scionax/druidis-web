@@ -9,11 +9,14 @@ export default class AdminController extends WebController {
 	static header = "";
 	static footer = "";
 	
+	static user = "";
+	static userList = "";
+	
 	async runHandler(conn: Conn): Promise<Response> {
 		
 		if(!conn.url2) { return await AdminController.sendAdminPage(conn); }
-		// if(conn.url2 === "user") { return await conn.sendHTML(AdminController.userPage); }
-		// if(conn.url2 === "user-list") { return await conn.sendHTML(AdminController.userListPage); }
+		if(conn.url2 === "user") { return await AdminController.sendAdminPage(conn); }
+		if(conn.url2 === "user-list") { return await AdminController.sendAdminPage(conn); }
 		
 		return await conn.send404();
 	}
@@ -32,7 +35,7 @@ export default class AdminController extends WebController {
 	}
 	
 	static applyLink(url: string, title: string) {
-		return `<a href="/about${url}" class="link">${title}</a>`;
+		return `<a href="/admin${url}" class="link">${title}</a>`;
 	}
 	
 	static async sendAdminPage(conn: Conn) {
@@ -42,7 +45,7 @@ export default class AdminController extends WebController {
 		return await conn.sendHTML(`
 			${AdminController.links}
 			${AdminController.header}
-			The main admin page, horray!
+			
 			${AdminController.footer}
 		`);
 	}

@@ -1,0 +1,1 @@
+class AdminPage { static async initialize() { const json = await API.callAPI(Nav.urlPathname); console.log(json); } } Script.register("AdminPage", AdminPage.initialize);

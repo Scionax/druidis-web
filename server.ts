@@ -17,6 +17,7 @@ import ScriptWatcher from "./core/ScriptWatcher.ts";
 import { log } from "./deps.ts";
 import AdminController from "./controller/AdminController.ts";
 import ServerMechanics from "./core/ServerMechanics.ts";
+import Playground from "./playground.ts";
 
 // Handle Setup Arguments
 // for( let i = 0; i < Deno.args.length; i++ ) {
@@ -74,6 +75,9 @@ async function handle(conn: Deno.Conn) {
 		}
 	}
 }
+
+// Run Playground
+Playground.runOnServerLoad();
 
 // Run Script File Watcher (local / dev only)
 if(config.local) { ScriptWatcher.initialize(); }
