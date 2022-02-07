@@ -4,27 +4,21 @@ import { log } from "../deps.ts";
 export default class Conn {
 	
 	// Core Values
-	public requestEvent: Deno.RequestEvent;
 	public request: Request;
-	public url: URL;
+	public onlyInnerContent = false;			// TRUE for /page urls. Means we only want to send the inner page content.
 	
 	// URL Segments
-	public onlyInnerContent = false;			// TRUE for /page urls. Means we only want to send the inner page content.
+	public url: URL;
 	public url1: string;
 	public url2: string;
 	public url3: string;
 	
-	// Response
-	public success = true;
-	public errorReason = "";
-	
 	// User Data
 	public id = 0;			// The user's [expected] ID (NOTE: This is not a verified ID, only what the cookie indicates).
 	
-	constructor(requestEvent: Deno.RequestEvent) {
-		this.requestEvent = requestEvent;
-		this.request = this.requestEvent.request;
-		this.url = new URL(requestEvent.request.url);
+	constructor(request: Request) {
+		this.request = request;
+		this.url = new URL(request.url);
 		
 		// Prepare URL Segments
 		const seg = this.url.pathname.split("/");		// e.g. ["", "api", "post"]
@@ -38,12 +32,6 @@ export default class Conn {
 		this.url1 = seg.length >= 2 ? seg[1] : "";
 		this.url2 = seg.length >= 3 ? seg[2] : "";
 		this.url3 = seg.length >= 4 ? seg[3] : "";
-	}
-	
-	public error(reason = ""): false {
-		this.success = false;
-		this.errorReason = reason;
-		return false;
 	}
 	
 	// ----- Process Active Users ----- //
