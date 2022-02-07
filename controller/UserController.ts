@@ -15,7 +15,7 @@ export default class UserController extends WebController {
 		if(conn.url2 === "logout") { return await conn.sendHTML(UserController.logoutPage); }
 		if(conn.url2 === "sign-up") { return await conn.sendHTML(UserController.signupPage); }
 		
-		return await conn.send404();
+		return await conn.notFound();
 	}
 	
 	static async initialize() {

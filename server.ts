@@ -54,7 +54,7 @@ async function handle(conn: Deno.Conn) {
 	for await (const requestEvent of httpConn) {
 		
 		// Note: If we're loading a /page url, it means we only send the inner page content; not the full HTML.
-		const conn = new Conn(requestEvent);
+		const conn = new Conn(requestEvent.request);
 		
 		// Process the Active User
 		conn.processActiveUser();
@@ -69,7 +69,7 @@ async function handle(conn: Deno.Conn) {
 			await requestEvent.respondWith(RouteMap.feed.runHandler(conn));
 		}
 		
-		// Error Page
+		// 404 - Request Not Found
 		else {
 			await requestEvent.respondWith( new Response("404 - Request Not Found", { status: 404 }) );
 		}

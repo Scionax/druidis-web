@@ -4,14 +4,14 @@ import { log } from "../deps.ts";
 export default class Conn {
 	
 	// Core Values
-	public request: Request;
-	public onlyInnerContent = false;			// TRUE for /page urls. Means we only want to send the inner page content.
+	public readonly request: Request;
+	public readonly onlyInnerContent: boolean;			// TRUE for /page urls. Means we only want to send the inner page content.
 	
 	// URL Segments
-	public url: URL;
-	public url1: string;
-	public url2: string;
-	public url3: string;
+	public readonly url: URL;
+	public readonly url1: string;
+	public readonly url2: string;
+	public readonly url3: string;
 	
 	// User Data
 	public id = 0;			// The user's [expected] ID (NOTE: This is not a verified ID, only what the cookie indicates).
@@ -24,8 +24,9 @@ export default class Conn {
 		const seg = this.url.pathname.split("/");		// e.g. ["", "api", "post"]
 		
 		// If we're dealing with a "/page" url, we only send the page HTML, not the full set.
-		if(seg[1] === "page") {
-			this.onlyInnerContent = true;
+		this.onlyInnerContent = (seg[1] === "page");
+		
+		if(this.onlyInnerContent) {
 			seg.shift();
 		}
 		
@@ -54,6 +55,7 @@ export default class Conn {
 	// return await conn.sendHTML("<div>Some Page!</div>");
 	async sendHTML( html: string ): Promise<Response> {
 		
+		// Return only the inner content of the page:
 		if(this.onlyInnerContent) {
 			return await new Response(html, { status: 200, headers: {
 				"Content-Type": "text/html; charset=utf-8",
@@ -66,28 +68,28 @@ export default class Conn {
 		}});
 	}
 	
-	// return await conn.send404("<div>Some Page!</div>");
-	async send404(): Promise<Response> {
-		return await new Response(WebController.bad404, { status: 400, headers: {
-			"Content-Type": "text/html; charset=utf-8",
-		}});
-	}
-	
 	// return await conn.sendJson("Path successful!");
-	async sendJson( jsonObj: unknown ): Promise<Response> {
+	async sendJSON( jsonObj: unknown ): Promise<Response> {
 		return await new Response(JSON.stringify(jsonObj), { status: 200, headers: {
 			"Content-Type": "application/json; charset=utf-8",
 		}});
 	}
 	
 	// return await conn.sendBadRequest("So that error just happened.");
-	async sendFail( reason = "Bad Request", status = 400 ): Promise<Response> {
+	async badRequest( reason = "Bad Request", status = 400 ): Promise<Response> {
 		log.debug(`WebRouter.sendBadRequest() Error: ${reason}`);
 		return await new Response(null, {
 			status: status,
 			statusText: reason,
 			headers: {
 				"Content-Type": "application/json; charset=utf-8",
+		}});
+	}
+	
+	// return await conn.send404("<div>Some Page!</div>");
+	async notFound(): Promise<Response> {
+		return await new Response(WebController.bad404, { status: 400, headers: {
+			"Content-Type": "text/html; charset=utf-8",
 		}});
 	}
 	

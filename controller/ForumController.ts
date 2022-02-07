@@ -41,7 +41,7 @@ export default class ForumController extends WebController {
 		
 		// If the forum doesn't exist, send a 404.
 		if(!ForumController.schema[conn.url2]) {
-			return await conn.send404();
+			return await conn.notFound();
 		}
 		
 		// Load a forum feed

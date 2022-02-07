@@ -18,7 +18,7 @@ export default class AdminController extends WebController {
 		if(conn.url2 === "user") { return await AdminController.sendAdminPage(conn); }
 		if(conn.url2 === "user-list") { return await AdminController.sendAdminPage(conn); }
 		
-		return await conn.send404();
+		return await conn.notFound();
 	}
 	
 	// deno-lint-ignore require-await

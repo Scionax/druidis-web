@@ -14,7 +14,7 @@ export default class FeedController extends WebController {
 		
 		// If the forum doesn't exist, send a 404.
 		if(!FeedController.schema[feed]) {
-			return await conn.send404();
+			return await conn.notFound();
 		}
 		
 		return await conn.sendHTML(FeedController.feedPage);

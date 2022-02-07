@@ -24,7 +24,7 @@ export default class AboutController extends WebController {
 		if(conn.url2 === "site-nav") { return await conn.sendHTML(AboutController.siteNavPage); }
 		if(conn.url2 === "partner") { return await conn.sendHTML(AboutController.partnerPage); }
 		
-		return await conn.send404();
+		return await conn.notFound();
 	}
 	
 	static async initialize() {
